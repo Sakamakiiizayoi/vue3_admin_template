@@ -19,7 +19,12 @@
                 <ElTableColumn label="品牌操作">
                     <template #="{ row }">
                         <ElButton type="primary" size="small" icon="Edit" @click="updateTrademark(row)"></ElButton>
-                        <ElButton type="primary" size="small" icon="Delete"></ElButton>
+                        <ElPopconfirm :title="`确认删除${row.tmName}品牌？`" width="250px" icon="Delete"
+                            @confirm="removeTrademark(row.id)">
+                            <template #reference>
+                                <ElButton type="primary" size="small" icon="Delete"></ElButton>
+                            </template>
+                        </ElPopconfirm>
                     </template>
                 </ElTableColumn>
             </ElTable>
@@ -54,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive, nextTick } from 'vue';
-import { reqHasTrademark, reqAddOrUpdateTrademark } from '@/api/product/trademark/index';
+import { reqHasTrademark, reqAddOrUpdateTrademark, reqDeleteTrademark } from '@/api/product/trademark/index';
 import type { Records, Trademark } from '@/api/product/trademark/type';
 import type { UploadProps, FormRules, FormInstance } from 'element-plus'
 
@@ -70,7 +75,7 @@ let trademarkParams = reactive<Trademark>({
 })
 let formElRef = ref<FormInstance>()
 
-//获取商品列表
+//获取品牌列表
 const getHasTrademark = async () => {
     loading.value = true
     let result = await reqHasTrademark(pageNo.value, limit.value)
@@ -104,6 +109,17 @@ const updateTrademark = (row: Trademark) => {
         formElRef.value?.resetFields()
         Object.assign(trademarkParams, row)
     })
+}
+
+//删除品牌
+const removeTrademark = async (id: number) => {
+    let result = await reqDeleteTrademark(id)
+    if (result.code === 200) {
+        ElMessage.success('删除成功')
+        getHasTrademark()
+    } else {
+        ElMessage.error('删除失败：' + result.message)
+    }
 }
 
 //取消
@@ -145,6 +161,7 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
     formElRef.value?.clearValidate('logoUrl') // 图片上传成功后清除表单验证红字
 }
 
+//图片上传验证
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png' && rawFile.type !== 'image/gif') {
         ElMessage.error('上传图片类型必须为jpg、png、gif!')
@@ -156,6 +173,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     return true
 }
 
+//
 const validatorTmName = (_rule: any, value: string, callback: any) => {
     if (value.trim().length >= 2) {
         callback()
@@ -164,6 +182,7 @@ const validatorTmName = (_rule: any, value: string, callback: any) => {
     }
 }
 
+//
 const validatorLogoUrl = (_rule: any, value: string, callback: any) => {
     if (value) {
         callback()
@@ -172,6 +191,7 @@ const validatorLogoUrl = (_rule: any, value: string, callback: any) => {
     }
 }
 
+//自定义表单验证
 const rules: FormRules = {
     tmName: [
         { required: true, trigger: 'blur', validator: validatorTmName }
