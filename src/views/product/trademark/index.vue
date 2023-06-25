@@ -3,7 +3,7 @@
         <ElCard>
             <ElButton type="primary" icon="Plus" @click="addTrademark">添加品牌</ElButton>
             <!-- 表格 -->
-            <ElTable v-loading=loading :border="true" :data="trademarkArr" class="table">
+            <ElTable v-loading="loading" :border="true" :data="trademarkArr" class="table">
                 <ElTableColumn label="序号" width="80px" align="center" type="index"></ElTableColumn>
                 <ElTableColumn label="品牌名称">
                     <template #="{ row }">
