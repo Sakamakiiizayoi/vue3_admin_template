@@ -30,11 +30,11 @@
         </ElCard>
         <!-- dialog组件 -->
         <ElDialog v-model="dialogVisible" :title="trademarkParams.id ? '修改品牌' : '添加品牌'" style="max-width: 600px;">
-            <ElForm style="width: 80%;">
-                <ElFormItem label="品牌名称" label-width="80px">
+            <ElForm style="width: 80%;" :model="trademarkParams" :rules="rules" ref="formElRef">
+                <ElFormItem label="品牌名称" label-width="100px" prop="tmName">
                     <ElInput placeholder="请输入品牌名称" v-model="trademarkParams.tmName"></ElInput>
                 </ElFormItem>
-                <ElFormItem label="品牌LOGO" label-width="80px">
+                <ElFormItem label="品牌LOGO" label-width="100px" prop="logoUrl">
                     <el-upload class="avatar-uploader" action="/api/admin/product/fileUpload" :show-file-list="false"
                         :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                         <img v-if="trademarkParams.logoUrl" :src="trademarkParams.logoUrl" class="avatar" />
@@ -53,10 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, nextTick } from 'vue';
 import { reqHasTrademark, reqAddOrUpdateTrademark } from '@/api/product/trademark/index';
 import type { Records, Trademark } from '@/api/product/trademark/type';
-import type { UploadProps } from 'element-plus'
+import type { UploadProps, FormRules, FormInstance } from 'element-plus'
 
 let pageNo = ref(1)
 let limit = ref(3)
@@ -68,7 +68,9 @@ let trademarkParams = reactive<Trademark>({
     tmName: '',
     logoUrl: ''
 })
+let formElRef = ref<FormInstance>()
 
+//获取商品列表
 const getHasTrademark = async () => {
     loading.value = true
     let result = await reqHasTrademark(pageNo.value, limit.value)
@@ -77,28 +79,47 @@ const getHasTrademark = async () => {
     trademarkArr.value = result.data.records
 }
 
+//改变每页条数
 const change = () => {
     pageNo.value = 1 //当limit改变则跳转到第一页
     getHasTrademark()
 }
 
+//打开添加品牌对话框
 const addTrademark = () => {
     dialogVisible.value = true
     trademarkParams.logoUrl = ''
     trademarkParams.tmName = ''
     trademarkParams.id = undefined
+
+    nextTick(() => {
+        formElRef.value?.resetFields()
+    })
 }
 
+//打开修改品牌对话框
 const updateTrademark = (row: Trademark) => {
     dialogVisible.value = true
-    Object.assign(trademarkParams, row)
+    nextTick(() => {
+        formElRef.value?.resetFields()
+        Object.assign(trademarkParams, row)
+    })
 }
 
+//取消
 const cancel = () => {
     dialogVisible.value = false
 }
 
+//提交表单
 const confirm = async () => {
+    //表单校验
+    let val = await formElRef.value?.validate().catch((error) => {
+        console.log('表单验证不通过', error)
+        return false
+    })
+    if (!val) return
+
     let msg = trademarkParams.id ? '修改品牌' : '添加品牌'
     let result = await reqAddOrUpdateTrademark(trademarkParams)
     dialogVisible.value = false
@@ -115,11 +136,13 @@ onMounted(() => {
     getHasTrademark()
 })
 
+//图片上传成功回调
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
     response,
     _uploadFile
 ) => {
     trademarkParams.logoUrl = response.data
+    formElRef.value?.clearValidate('logoUrl') // 图片上传成功后清除表单验证红字
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
@@ -132,6 +155,32 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     }
     return true
 }
+
+const validatorTmName = (_rule: any, value: string, callback: any) => {
+    if (value.trim().length >= 2) {
+        callback()
+    } else {
+        callback(new Error('品牌名称必须大于两位'))
+    }
+}
+
+const validatorLogoUrl = (_rule: any, value: string, callback: any) => {
+    if (value) {
+        callback()
+    } else {
+        callback(new Error('必须上传LOGO'))
+    }
+}
+
+const rules: FormRules = {
+    tmName: [
+        { required: true, trigger: 'blur', validator: validatorTmName }
+    ],
+    logoUrl: [
+        { required: true, validator: validatorLogoUrl }
+    ]
+}
+
 </script>
 
 <script lang="ts">
