@@ -17,8 +17,8 @@
                     </template>
                 </ElTableColumn>
                 <ElTableColumn label="品牌操作">
-                    <template #="{}">
-                        <ElButton type="primary" size="small" icon="Edit" @click="updateTrademark"></ElButton>
+                    <template #="{ row }">
+                        <ElButton type="primary" size="small" icon="Edit" @click="updateTrademark(row)"></ElButton>
                         <ElButton type="primary" size="small" icon="Delete"></ElButton>
                     </template>
                 </ElTableColumn>
@@ -29,7 +29,7 @@
                 @current-change="getHasTrademark" @size-change="change" />
         </ElCard>
         <!-- dialog组件 -->
-        <ElDialog v-model="dialogVisible" title="添加品牌" style="max-width: 600px;">
+        <ElDialog v-model="dialogVisible" :title="trademarkParams.id ? '修改品牌' : '添加品牌'" style="max-width: 600px;">
             <ElForm style="width: 80%;">
                 <ElFormItem label="品牌名称" label-width="80px">
                     <ElInput placeholder="请输入品牌名称" v-model="trademarkParams.tmName"></ElInput>
@@ -86,10 +86,12 @@ const addTrademark = () => {
     dialogVisible.value = true
     trademarkParams.logoUrl = ''
     trademarkParams.tmName = ''
+    trademarkParams.id = undefined
 }
 
-const updateTrademark = () => {
+const updateTrademark = (row: Trademark) => {
     dialogVisible.value = true
+    Object.assign(trademarkParams, row)
 }
 
 const cancel = () => {
@@ -97,13 +99,15 @@ const cancel = () => {
 }
 
 const confirm = async () => {
+    let msg = trademarkParams.id ? '修改品牌' : '添加品牌'
     let result = await reqAddOrUpdateTrademark(trademarkParams)
     dialogVisible.value = false
-    if(result.code === 200){
-        ElMessage.success('添加品牌成功')
+
+    if (result.code === 200) {
+        ElMessage.success(`${msg}成功！`)
         getHasTrademark()
-    }else{
-        ElMessage.error(`添加品牌失败：${result.message}`)
+    } else {
+        ElMessage.error(`${msg}失败：${result.message}`)
     }
 }
 
@@ -137,9 +141,10 @@ export default {
 </script>
 
 <style scoped>
-.table{
+.table {
     margin: 10px 0;
 }
+
 .avatar-uploader .avatar {
     width: 178px;
     height: 178px;
