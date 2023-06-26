@@ -38,3 +38,24 @@ export type CategoryState = {
     c3Arr: C3Response['data'],
     c3Id: number | undefined
 }
+
+export type AttrValueList = {
+    id: number
+    valueName: string
+    attrId: number
+}[]
+
+export type AttrData = {
+    id: number
+    attrName: string
+    categoryId: number
+    categoryLevel: number
+    attrValueList: AttrValueList
+}
+
+export type AttrResponse = {
+    code: number
+    message: string
+    data: AttrData[]
+    ok: boolean
+}

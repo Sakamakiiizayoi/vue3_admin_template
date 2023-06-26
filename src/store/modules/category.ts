@@ -10,7 +10,7 @@ const useCategoryStore = defineStore('Category', {
             c2Arr: [],
             c2Id: undefined,
             c3Arr: [],
-            c3Id: undefined
+            c3Id: undefined,
         }
     },
     actions: {
