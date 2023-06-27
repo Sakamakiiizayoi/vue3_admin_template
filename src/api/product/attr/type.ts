@@ -32,30 +32,38 @@ export type C3Response = {
 
 export type CategoryState = {
     c1Arr: C1Response['data'],
-    c1Id: number | undefined,
+    c1Id?: number,
     c2Arr: C2Response['data'],
-    c2Id: number | undefined,
+    c2Id?: number,
     c3Arr: C3Response['data'],
-    c3Id: number | undefined
+    c3Id?: number
 }
 
-export type AttrValueList = {
-    id: number
+export type AttrValue = {
+    id?: number
     valueName: string
-    attrId: number
-}[]
+    attrId?: number,
+    flag?: boolean,
+}
 
 export type AttrData = {
-    id: number
+    id?: number
     attrName: string
-    categoryId: number
+    categoryId?: number
     categoryLevel: number
-    attrValueList: AttrValueList
+    attrValueList: AttrValue[]
 }
 
 export type AttrResponse = {
     code: number
     message: string
     data: AttrData[]
+    ok: boolean
+}
+
+export type ResponseData = {
+    code: number,
+    data: null,
+    message: string,
     ok: boolean
 }
