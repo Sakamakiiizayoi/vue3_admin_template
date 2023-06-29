@@ -1,20 +1,21 @@
 export type ResponseData = {
     code: number
     message: string
-    ok: boolean
+    ok: boolean,
+    data?: any
 }
 
 export type SpuData = {
-    category3Id: number
-    // createTime: string
+    category3Id?: number
+    createTime?: string
+    updateTime?: string
     description: string
     id?: number
     spuImageList?: SpuImg[]
     spuName: string
-    // spuPosterList?: any[]
+    spuPosterList?: any[]
     spuSaleAttrList?: SaleAttr[]
-    tmId: number
-    // updateTime: string
+    tmId?: number
 }
 
 export type Records = SpuData[]
@@ -44,7 +45,7 @@ export type SpuImg = {
     id?: number,
     createTime?: string,
     updateTime?: string,
-    spuId: number,
+    spuId?: number,
     imgName: string,
     imgUrl: string
 }
