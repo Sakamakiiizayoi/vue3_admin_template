@@ -59,7 +59,7 @@
                 </ElTable>
             </ElFormItem>
             <ElFormItem>
-                <ElButton type="primary">保存</ElButton>
+                <ElButton type="primary" @click="save">保存</ElButton>
                 <ElButton @click="cancel">取消</ElButton>
             </ElFormItem>
         </ElForm>
@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { ref, computed, nextTick, reactive } from 'vue';
-import { reqAllSaleAttr, reqAllTradeMark, reqSpuHasSaleAttr, reqSpuImageList } from '@/api/product/spu';
+import { reqAddOrUpdateSpu, reqAllSaleAttr, reqAllTradeMark, reqSpuHasSaleAttr, reqSpuImageList } from '@/api/product/spu';
 import type { SpuData, SpuImg, TradeMark, SaleAttr, HasSaleAttr } from '@/api/product/spu/type';
 import type { InputInstance, UploadProps, UploadUserFile } from 'element-plus'
 let emit = defineEmits(['changeScene'])
@@ -84,10 +84,10 @@ let allSaleAttr = ref<HasSaleAttr[]>([])
 let selectSaleAttrId = ref<number | undefined>(undefined)
 
 let spuParams = reactive<SpuData>({
-    category3Id: 0,
+    category3Id: undefined,
     spuName: '',
     description: '',
-    tmId: 0,
+    tmId: undefined,
     spuImageList: [],
     spuSaleAttrList: []
 })
@@ -161,14 +161,42 @@ const addSaleAttr = () => {
 }
 
 /**
- * 取消返回场景
+ * 保存按钮回调
  */
-const cancel = () => {
-    emit('changeScene', 0)
+const save = async () => {
+    spuParams.spuImageList = fileList.value.map((item: any) => {
+        return {
+            imgName: item.name,
+            imgUrl: item.response ? item.response.data : item.url
+        }
+    })
+    spuParams.spuSaleAttrList = saleAttrArr.value
+    let result = await reqAddOrUpdateSpu(spuParams)
+
+    let msg = spuParams.id ? '修改' : '添加'
+
+    if (result.code === 200) {
+        ElMessage.success(msg + '成功！')
+        if(spuParams.id){
+            emit('changeScene', 0, true)
+        }else{
+            emit('changeScene', 0, false)
+        }
+    } else {
+        ElMessage.error(msg + '失败:' + result.message + result.data)
+    }
+
 }
 
 /**
- * 初始化加载spu数据 获取照片、销售属性等
+ * 取消返回场景
+ */
+const cancel = () => {
+    emit('changeScene', 0, true)
+}
+
+/**
+ * 更新spu-初始化加载spu数据 获取照片、销售属性等
  * @param spu 
  */
 const initHasSpuData = async (spu: SpuData) => {
@@ -189,6 +217,35 @@ const initHasSpuData = async (spu: SpuData) => {
             url: imgUrl!
         }
     })
+}
+
+/**
+ * 添加spu
+ * @param spu 
+ */
+const initAddSpuData = async (c3Id: number) => {
+    // 重置数据
+    Object.assign(spuParams, {
+        category3Id: undefined,
+        spuName: '',
+        description: '',
+        tmId: undefined,
+        spuImageList: [],
+        spuSaleAttrList: []
+    })
+    selectSaleAttrId.value = undefined
+    fileList.value = []
+    saleAttrArr.value = []
+
+    spuParams.category3Id = c3Id
+    loading.value = true
+    //获取所有品牌和销售属性
+    let result = await reqAllTradeMark()
+    let result3 = await reqAllSaleAttr()
+    loading.value = false
+
+    allTradeMark.value = result.data
+    allSaleAttr.value = result3.data
 
 }
 
@@ -205,10 +262,10 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (e) => {
  * 图片上传成功回调
  */
 const handleSuccess: UploadProps['onSuccess'] = (
-    _response,
-    _uploadFile
+    response,
+    uploadFile
 ) => {
-
+    uploadFile.response = response
 }
 
 /**
@@ -224,7 +281,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
     }
     return true
 }
-defineExpose({ initHasSpuData })
+defineExpose({ initHasSpuData, initAddSpuData })
 </script>
 
 <style scoped lang="">

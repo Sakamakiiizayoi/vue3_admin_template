@@ -13,7 +13,8 @@
                     <ElTableColumn label="SPU操作">
                         <template #="{ row }">
                             <ElButton type="primary" size="small" icon="Plus" title="添加SKU"></ElButton>
-                            <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)"></ElButton>
+                            <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)">
+                            </ElButton>
                             <ElButton type="info" size="small" icon="View" title="查看SKU列表"></ElButton>
                             <ElButton type="danger" size="small" icon="Delete" title="删除SPU"></ElButton>
                         </template>
@@ -30,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onBeforeUnmount } from 'vue';
 import useCategoryStore from '@/store/modules/category';
 import { reqHasSpu } from '@/api/product/spu';
 import type { Records } from '@/api/product/spu/type';
@@ -46,6 +47,9 @@ let spuFormRef = ref<any>(null)
 let categoryStore = useCategoryStore()
 let records = ref<Records>([])
 
+/**
+ * 监视三级分类id变化
+ */
 watch(() => categoryStore.c3Id, () => {
     if (categoryStore.c3Id) {
         getHasSpu()
@@ -55,6 +59,17 @@ watch(() => categoryStore.c3Id, () => {
     }
 })
 
+/**
+ * 卸载前执行
+ */
+onBeforeUnmount(() => {
+    categoryStore.$reset()
+})
+
+/**
+ * 重新获取第几页的数据
+ * @param page 
+ */
 let getHasSpu = async (page = 1) => {
     pageNo.value = page
     loading.value = true
@@ -66,18 +81,40 @@ let getHasSpu = async (page = 1) => {
     }
 }
 
+/**
+ * 分页大小改变回调
+ */
 const sizeChange = () => {
     getHasSpu(1)
 }
 
-const changeScene = (id: number) => {
+/**
+ * 切换场景
+ * @param id 
+ */
+const changeScene = (id: number, stay = false) => {
     scene.value = id
+    if (id === 0) {
+        if (stay) {
+            getHasSpu(pageNo.value)
+        } else {
+            getHasSpu()
+        }
+    }
 }
 
+/**
+ * 添加spu按钮回调
+ */
 const addSpu = () => {
     scene.value = 1
+    spuFormRef.value!.initAddSpuData(categoryStore.c3Id)
 }
 
+/**
+ * 更新spu按钮回调
+ * @param row 
+ */
 const updateSpu = (row: any) => {
     scene.value = 1
     spuFormRef.value!.initHasSpuData(row)
