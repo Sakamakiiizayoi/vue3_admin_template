@@ -26,7 +26,7 @@ export type Trademark = {
 
 export type Records = Trademark[]
 
-export type responseData = {
+export type ResponseData = {
     code: number,
     data: null,
     message: string,

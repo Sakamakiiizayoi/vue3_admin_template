@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { TrademarkResponse, Trademark, responseData } from './type';
+import { TrademarkResponse, Trademark, ResponseData } from './type';
 
 enum API {
     TRADEMARK_URL = '/admin/product/baseTrademark',
@@ -12,11 +12,11 @@ export const reqHasTrademark = (page: number, limit: number) => request.get<any,
 
 export const reqAddOrUpdateTrademark = (data: Trademark) => {
     if (data.id) {
-        return request.put<any, responseData>(API.UPDATE_TRADEMARK_URL, data)
+        return request.put<any, ResponseData>(API.UPDATE_TRADEMARK_URL, data)
     } else {
-        return request.post<any, responseData>(API.ADD_TRADEMARK_URL, data)
+        return request.post<any, ResponseData>(API.ADD_TRADEMARK_URL, data)
     }
 }
 
-export const reqDeleteTrademark = (id: number) => request.delete<any, responseData>(API.DELETE_TRADEMARK_URL + id)
+export const reqDeleteTrademark = (id: number) => request.delete<any, ResponseData>(API.DELETE_TRADEMARK_URL + id)
 

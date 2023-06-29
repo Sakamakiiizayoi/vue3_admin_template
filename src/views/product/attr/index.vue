@@ -43,7 +43,7 @@
                     <ElTableColumn label="属性值名称">
                         <template #="{ row, $index }">
                             <ElInput size="small" v-if="row.flag" v-model="row.valueName" @blur="toLock(row, $index)"
-                                @keydown.enter="toLock(row, $index)" placeholder="请输入属性值名称"
+                                @keydown.enter="elInputArr[$index].blur()" placeholder="请输入属性值名称"
                                 :ref="(el: any) => elInputArr[$index] = el"></ElInput>
                             <div style="cursor: pointer;" v-else @click="toEdit(row, $index)">{{ row.valueName }}</div>
                         </template>
