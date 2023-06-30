@@ -85,3 +85,42 @@ export type HasSaleAttr = {
 export interface AllSaleAttrResponseData extends ResponseData {
     data: HasSaleAttr[]
 }
+
+export type SkuData = {
+    category3Id?: number
+    createTime?: string
+    skuName: string
+    id?: number
+    isSale?: number
+    price?: number
+    spuId?: number //spuid
+    tmId?: number //品牌id
+    skuDefaultImg: string
+    skuDesc: string
+    weight: string
+    skuAttrValueList: Array<{
+        attrId: number
+        attrName: string
+        id: number
+        skuId: number
+        valueId: number
+        valueName: string
+    }>
+    skuImageList?: Array<{
+        id: number
+        imgName: string
+        imgUrl: string
+        isDefault: string
+        skuId: number
+        spuImgId: number
+    }>
+    skuSaleAttrValueList: Array<{
+        id: number
+        saleAttrId: number
+        saleAttrName: string
+        saleAttrValueId: number
+        saleAttrValueName: string
+        skuId: number
+        spuId: number
+    }>
+}
