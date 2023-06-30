@@ -52,6 +52,7 @@ export type AttrData = {
     categoryId?: number
     categoryLevel: number
     attrValueList: AttrValue[]
+    selectAttrValueId?: number
 }
 
 export type AttrResponse = {

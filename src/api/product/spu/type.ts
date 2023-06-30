@@ -71,6 +71,7 @@ export type SaleAttr = {
     spuSaleAttrValueList: Array<SaleAttrValue>
     inputFlag?: boolean
     inputValue?: ''
+    selectSaleAttrValueId?: number
 }
 
 export interface SaleAttrResponseData extends ResponseData {
@@ -100,11 +101,7 @@ export type SkuData = {
     weight: string
     skuAttrValueList: Array<{
         attrId: number
-        attrName: string
-        id: number
-        skuId: number
         valueId: number
-        valueName: string
     }>
     skuImageList?: Array<{
         id: number
@@ -115,12 +112,7 @@ export type SkuData = {
         spuImgId: number
     }>
     skuSaleAttrValueList: Array<{
-        id: number
         saleAttrId: number
-        saleAttrName: string
         saleAttrValueId: number
-        saleAttrValueName: string
-        skuId: number
-        spuId: number
     }>
 }
