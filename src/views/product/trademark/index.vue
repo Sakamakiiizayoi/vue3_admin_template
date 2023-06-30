@@ -76,7 +76,9 @@ let trademarkParams = reactive<Trademark>({
 let formElRef = ref<FormInstance>()
 
 //获取品牌列表
-const getHasTrademark = async () => {
+const getHasTrademark = async (page = 1) => {
+    if (page <= 0) page = 1
+    pageNo.value = page
     loading.value = true
     let result = await reqHasTrademark(pageNo.value, limit.value)
     loading.value = false
@@ -86,8 +88,8 @@ const getHasTrademark = async () => {
 
 //改变每页条数
 const change = () => {
-    pageNo.value = 1 //当limit改变则跳转到第一页
-    getHasTrademark()
+    //当limit改变则跳转到第一页
+    getHasTrademark(1)
 }
 
 //打开添加品牌对话框
@@ -116,7 +118,7 @@ const removeTrademark = async (id: number) => {
     let result = await reqDeleteTrademark(id)
     if (result.code === 200) {
         ElMessage.success('删除成功')
-        getHasTrademark()
+        getHasTrademark(trademarkArr.value.length > 1 ? pageNo.value : pageNo.value - 1)
     } else {
         ElMessage.error('删除失败：' + result.message)
     }
