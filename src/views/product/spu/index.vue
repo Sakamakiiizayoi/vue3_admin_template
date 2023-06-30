@@ -17,7 +17,12 @@
                             </ElButton>
                             <ElButton type="info" size="small" icon="View" title="查看SKU列表" @click="showSkuList(row)">
                             </ElButton>
-                            <ElButton type="danger" size="small" icon="Delete" title="删除SPU"></ElButton>
+                            <ElPopconfirm :title="`确认删除${row.spuName}SPU？`" width="250px" icon="Delete"
+                                @confirm="deleteSpu(row.id)">
+                                <template #reference>
+                                    <ElButton type="danger" size="small" icon="Delete" title="删除SPU"></ElButton>
+                                </template>
+                            </ElPopconfirm>
                         </template>
                     </ElTableColumn>
                 </ElTable>
@@ -46,7 +51,7 @@
 <script setup lang="ts">
 import { ref, watch, onBeforeUnmount } from 'vue';
 import useCategoryStore from '@/store/modules/category';
-import { reqHasSpu, reqGetSkuList } from '@/api/product/spu';
+import { reqHasSpu, reqGetSkuList, reqDeleteSpu } from '@/api/product/spu';
 import type { Records, SkuData, SpuData } from '@/api/product/spu/type';
 import SkuForm from './skuForm.vue'
 import SpuForm from './spuForm.vue'
@@ -85,6 +90,7 @@ onBeforeUnmount(() => {
  * @param page 
  */
 let getHasSpu = async (page = 1) => {
+    if (page <= 0) page = 1
     pageNo.value = page
     loading.value = true
     let result = await reqHasSpu(pageNo.value, limit.value, categoryStore.c3Id!)
@@ -159,6 +165,20 @@ const showSkuList = async (row: SkuData) => {
         skuArr.value = result.data
     } else {
         ElMessage.error('获取SKU列表失败：' + result.message)
+    }
+}
+
+/**
+ * 删除spu按钮回调
+ * @param spuId 
+ */
+const deleteSpu = async (spuId: number) => {
+    let result = await reqDeleteSpu(spuId)
+    if (result.code === 200) {
+        ElMessage.success('删除成功！')
+        getHasSpu(records.value.length > 1 ? pageNo.value : pageNo.value - 1)
+    } else {
+        ElMessage.error(`删除失败：${result.message}|${result.data}`)
     }
 }
 </script>
