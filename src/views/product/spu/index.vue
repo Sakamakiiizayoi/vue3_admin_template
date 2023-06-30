@@ -93,9 +93,9 @@ const sizeChange = () => {
  * 切换场景
  * @param id 
  */
-const changeScene = (id: number, stay = true) => {
+const changeScene = (id: number, stay = true, update = true) => {
     scene.value = id
-    if (id === 0) {
+    if (id === 0 && update) {
         if (stay) {
             getHasSpu(pageNo.value)
         } else {
