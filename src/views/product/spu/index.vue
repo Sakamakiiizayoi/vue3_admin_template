@@ -15,7 +15,8 @@
                             <ElButton type="primary" size="small" icon="Plus" title="添加SKU" @click="addSku(row)"></ElButton>
                             <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)">
                             </ElButton>
-                            <ElButton type="info" size="small" icon="View" title="查看SKU列表"></ElButton>
+                            <ElButton type="info" size="small" icon="View" title="查看SKU列表" @click="showSkuList(row)">
+                            </ElButton>
                             <ElButton type="danger" size="small" icon="Delete" title="删除SPU"></ElButton>
                         </template>
                     </ElTableColumn>
@@ -26,6 +27,18 @@
             </div>
             <SpuForm ref="spuFormRef" v-show="scene === 1" @changeScene="changeScene"></SpuForm>
             <SkuForm ref="skuFormRef" v-show="scene === 2" @changeScene="changeScene"></SkuForm>
+            <ElDialog v-model="skuListShow" title="SKU列表">
+                <ElTable border :data="skuArr" v-loading="skuLoading">
+                    <ElTableColumn label="SKU名字" prop="skuName"></ElTableColumn>
+                    <ElTableColumn label="SKU价格" prop="price"></ElTableColumn>
+                    <ElTableColumn label="SKU重量" prop="weight"></ElTableColumn>
+                    <ElTableColumn label="SKU图片">
+                        <template #="{ row }">
+                            <ElImage style="width: 100px;" :src="row.skuDefaultImg"></ElImage>
+                        </template>
+                    </ElTableColumn>
+                </ElTable>
+            </ElDialog>
         </ElCard>
     </div>
 </template>
@@ -33,8 +46,8 @@
 <script setup lang="ts">
 import { ref, watch, onBeforeUnmount } from 'vue';
 import useCategoryStore from '@/store/modules/category';
-import { reqHasSpu } from '@/api/product/spu';
-import type { Records, SpuData } from '@/api/product/spu/type';
+import { reqHasSpu, reqGetSkuList } from '@/api/product/spu';
+import type { Records, SkuData, SpuData } from '@/api/product/spu/type';
 import SkuForm from './skuForm.vue'
 import SpuForm from './spuForm.vue'
 
@@ -127,6 +140,26 @@ const updateSpu = (row: any) => {
 const addSku = (row: SpuData) => {
     scene.value = 2
     skuFormRef.value!.initSkuData(categoryStore.c1Id, categoryStore.c2Id, row)
+}
+
+let skuListShow = ref(false)
+let skuLoading = ref(false)
+let skuArr = ref<SkuData[]>([])
+/**
+ * 查看sku按钮回调
+ * @param row 
+ */
+const showSkuList = async (row: SkuData) => {
+    skuListShow.value = true
+    skuArr.value = []
+    skuLoading.value = true
+    let result = await reqGetSkuList(row.id!)
+    skuLoading.value = false
+    if (result.code === 200) {
+        skuArr.value = result.data
+    } else {
+        ElMessage.error('获取SKU列表失败：' + result.message)
+    }
 }
 </script>
 
