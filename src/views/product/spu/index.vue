@@ -12,7 +12,7 @@
                     <ElTableColumn label="SPU描述" prop="description" show-overflow-tooltip></ElTableColumn>
                     <ElTableColumn label="SPU操作">
                         <template #="{ row }">
-                            <ElButton type="primary" size="small" icon="Plus" title="添加SKU"></ElButton>
+                            <ElButton type="primary" size="small" icon="Plus" title="添加SKU" @click="addSku(row)"></ElButton>
                             <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)">
                             </ElButton>
                             <ElButton type="info" size="small" icon="View" title="查看SKU列表"></ElButton>
@@ -25,7 +25,7 @@
                     @current-change="getHasSpu" @size-change="sizeChange" />
             </div>
             <SpuForm ref="spuFormRef" v-show="scene === 1" @changeScene="changeScene"></SpuForm>
-            <SkuForm v-show="scene === 2" @changeScene="changeScene"></SkuForm>
+            <SkuForm ref="skuFormRef" v-show="scene === 2" @changeScene="changeScene"></SkuForm>
         </ElCard>
     </div>
 </template>
@@ -34,7 +34,7 @@
 import { ref, watch, onBeforeUnmount } from 'vue';
 import useCategoryStore from '@/store/modules/category';
 import { reqHasSpu } from '@/api/product/spu';
-import type { Records } from '@/api/product/spu/type';
+import type { Records, SpuData } from '@/api/product/spu/type';
 import SkuForm from './skuForm.vue'
 import SpuForm from './spuForm.vue'
 
@@ -44,6 +44,7 @@ let limit = ref(3)
 let total = ref(0)
 let loading = ref(false)
 let spuFormRef = ref<any>(null)
+let skuFormRef = ref<any>(null)
 let categoryStore = useCategoryStore()
 let records = ref<Records>([])
 
@@ -92,7 +93,7 @@ const sizeChange = () => {
  * 切换场景
  * @param id 
  */
-const changeScene = (id: number, stay = false) => {
+const changeScene = (id: number, stay = true) => {
     scene.value = id
     if (id === 0) {
         if (stay) {
@@ -118,6 +119,14 @@ const addSpu = () => {
 const updateSpu = (row: any) => {
     scene.value = 1
     spuFormRef.value!.initHasSpuData(row)
+}
+
+/**
+ * 添加sku按钮回调
+ */
+const addSku = (row: SpuData) => {
+    scene.value = 2
+    skuFormRef.value!.initSkuData(categoryStore.c1Id, categoryStore.c2Id, row)
 }
 </script>
 
