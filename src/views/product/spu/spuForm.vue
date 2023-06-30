@@ -193,8 +193,8 @@ const save = async () => {
  * 取消返回场景
  */
 const cancel = () => {
-    resetData()
     emit('changeScene', 0, true)
+    resetData()
 }
 
 /**

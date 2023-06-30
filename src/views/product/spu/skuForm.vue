@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ElForm label-width="100px">
+        <ElForm v-loading="loading" label-width="100px">
             <ElFormItem label="SKU名称">
                 <ElInput placeholder="请输入SKU名称" v-model="skuParams.skuName"></ElInput>
             </ElFormItem>
@@ -65,6 +65,7 @@ import { reqSpuHasSaleAttr, reqSpuImageList, reqAddSku } from '@/api/product/spu
 import type { SaleAttr, SpuData, SpuImg, SkuData } from '@/api/product/spu/type';
 import { TableInstance } from 'element-plus';
 
+let loading = ref(false)
 let imgTableRef = ref<TableInstance>()
 let attrArr = ref<AttrData[]>([])
 let saleArr = ref<SaleAttr[]>([])
@@ -90,20 +91,21 @@ let emit = defineEmits(['changeScene'])
  */
 const cancel = () => {
     emit('changeScene', 0)
+    resetData()
 }
 
 /**
- * 初始化获取数据
+ * 重置表单数据
  */
-const initSkuData = async (c1Id: number, c2Id: number, row: SpuData) => {
+const resetData = () => {
     //清空属性
     Object.assign(skuParams, {
         category3Id: undefined,
         skuName: '',
         id: undefined,
         price: undefined,
-        spuId: row.id,
-        tmId: row.tmId,
+        spuId: undefined,
+        tmId: undefined,
         skuDefaultImg: '',
         skuDesc: '',
         weight: '',
@@ -113,16 +115,25 @@ const initSkuData = async (c1Id: number, c2Id: number, row: SpuData) => {
     attrArr.value = []
     saleArr.value = []
     imgArr.value = []
+}
 
+/**
+ * 初始化获取数据
+ */
+const initSkuData = async (c1Id: number, c2Id: number, row: SpuData) => {
+    resetData()
+    loading.value = true
     //平台属性
     let re1 = await reqAttr(c1Id, c2Id, row.category3Id!)
     //销售属性
     let re2 = await reqSpuHasSaleAttr(row.id!)
     //照片
     let re3 = await reqSpuImageList(row.id!)
+    loading.value = false
     attrArr.value = re1.data
     saleArr.value = re2.data
     imgArr.value = re3.data
+    skuParams.spuId = row.id
 }
 
 /**
@@ -151,6 +162,7 @@ const save = async () => {
     if (result.code === 200) {
         ElMessage.success('添加成功')
         emit('changeScene', 0, true, false)
+        resetData()
     } else {
         ElMessage.error('添加失败' + result.message + result.data)
     }
