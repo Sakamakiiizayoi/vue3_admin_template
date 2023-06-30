@@ -99,7 +99,7 @@ export type SkuData = {
     skuDefaultImg: string
     skuDesc: string
     weight: string
-    skuAttrValueList: Array<{
+    skuAttrValueList?: Array<{
         attrId: number
         valueId: number
     }>
@@ -111,8 +111,12 @@ export type SkuData = {
         skuId: number
         spuImgId: number
     }>
-    skuSaleAttrValueList: Array<{
+    skuSaleAttrValueList?: Array<{
         saleAttrId: number
         saleAttrValueId: number
     }>
+}
+
+export interface SkuListResponse extends ResponseData {
+    data: SkuData[]
 }
