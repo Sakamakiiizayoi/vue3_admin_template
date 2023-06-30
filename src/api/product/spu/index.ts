@@ -10,7 +10,8 @@ enum API {
     ADDSPU_URL = '/admin/product/saveSpuInfo',
     UPDATESPU_URL = '/admin/product/updateSpuInfo',
     ADDSKU_URL = '/admin/product/saveSkuInfo',
-    GETSKULIST_URL = '/admin/product/findBySpuId/'
+    GETSKULIST_URL = '/admin/product/findBySpuId/',
+    DELETESPU_URL = '/admin/product/deleteSpu/',
 }
 
 export const reqHasSpu = (page: number, limit: number, c3Id: number) => request.get<any, HasSpuResponseData>(`${API.HASSPU_URL}/${page}/${limit}?category3Id=${c3Id}`)
@@ -34,3 +35,5 @@ export const reqAddOrUpdateSpu = (data: SpuData) => {
 export const reqAddSku = (data: SkuData) => request.post<any, ResponseData>(API.ADDSKU_URL, data)
 
 export const reqGetSkuList = (spuId: number) => request.get<any, SkuListResponse>(API.GETSKULIST_URL + spuId)
+
+export const reqDeleteSpu = (spuId: number) => request.delete<any, ResponseData>(API.DELETESPU_URL + spuId)
