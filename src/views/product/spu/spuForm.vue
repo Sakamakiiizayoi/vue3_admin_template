@@ -182,6 +182,7 @@ const save = async () => {
         }else{
             emit('changeScene', 0, false)
         }
+        resetData()
     } else {
         ElMessage.error(msg + '失败:' + result.message + result.data)
     }
@@ -192,6 +193,7 @@ const save = async () => {
  * 取消返回场景
  */
 const cancel = () => {
+    resetData()
     emit('changeScene', 0, true)
 }
 
@@ -220,10 +222,9 @@ const initHasSpuData = async (spu: SpuData) => {
 }
 
 /**
- * 添加spu
- * @param spu 
+ * 重置表单数据
  */
-const initAddSpuData = async (c3Id: number) => {
+const resetData = () => {
     // 重置数据
     Object.assign(spuParams, {
         category3Id: undefined,
@@ -236,6 +237,15 @@ const initAddSpuData = async (c3Id: number) => {
     selectSaleAttrId.value = undefined
     fileList.value = []
     saleAttrArr.value = []
+}
+
+/**
+ * 添加spu
+ * @param spu 
+ */
+const initAddSpuData = async (c3Id: number) => {
+    // 重置数据
+    resetData()
 
     spuParams.category3Id = c3Id
     loading.value = true
