@@ -33,4 +33,16 @@ watch(() => layoutSettingStore.refresh, () => {
 .fade-enter-to {
     opacity: 1;
 }
+
+.fade-leave-from {
+    display: none;
+}
+
+.fade-leave-active {
+    display: none;
+}
+
+.fade-leave-to {
+    display: none;
+}
 </style>
