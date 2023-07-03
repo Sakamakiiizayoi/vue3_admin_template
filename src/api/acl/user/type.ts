@@ -10,8 +10,8 @@ export type User = {
     createTime?: string
     updateTime?: string
     username: string
-    password: string
-    name: string
+    password?: string
+    name?: string
     phone?: string
     roleName?: string
 }
@@ -32,4 +32,26 @@ export type UserData = {
 
 export interface UserResponseData extends ResponseData {
     data: UserData
+}
+
+export type Role = {
+    id?: number
+    createTime?: string
+    updateTime?: string
+    roleName: string
+    remark?: string
+}
+
+export type RoleData = {
+    assignRoles: Array<Role>
+    allRolesList: Array<Role>
+}
+
+export interface AllRoleResponseData extends ResponseData {
+    data: RoleData
+}
+
+export type SetRolesParams = {
+    roleIdList: number[],
+    userId: number
 }
