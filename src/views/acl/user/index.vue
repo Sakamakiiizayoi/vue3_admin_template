@@ -13,8 +13,13 @@
         </ElCard>
         <ElCard style="margin-top: 10px;">
             <ElButton type="primary" @click="addUser">添加用户</ElButton>
-            <ElButton type="danger">批量删除</ElButton>
-            <ElTable v-loading="tableLoading" border style="margin: 10px 0;" :data="userArr">
+            <ElPopconfirm :title="`确认删除选中用户吗？`" width="250px" icon="Delete" @confirm="deleteUsers">
+                <template #reference>
+                    <ElButton type="danger" :disabled="selectUserArr.length === 0">批量删除</ElButton>
+                </template>
+            </ElPopconfirm>
+            <ElTable v-loading="tableLoading" border style="margin: 10px 0;" :data="userArr"
+                @selection-change="selectChange">
                 <ElTableColumn type="selection"></ElTableColumn>
                 <ElTableColumn type="index" label="#"></ElTableColumn>
                 <ElTableColumn label="ID" prop="id"></ElTableColumn>
@@ -27,7 +32,13 @@
                     <template #="{ row }">
                         <ElButton size="small" type="primary" icon="User" @click="setRole(row)">分配角色</ElButton>
                         <ElButton size="small" type="warning" icon="Edit" @click="updateUser(row)">编辑</ElButton>
-                        <ElButton size="small" type="danger" icon="Delete">删除</ElButton>
+
+                        <ElPopconfirm :title="`确认删除${row.username}吗？`" width="250px" icon="Delete"
+                            @confirm="deleteUser(row)">
+                            <template #reference>
+                                <ElButton size="small" type="danger" icon="Delete">删除</ElButton>
+                            </template>
+                        </ElPopconfirm>
                     </template>
                 </ElTableColumn>
             </ElTable>
@@ -64,7 +75,7 @@
                 <h4>分配角色用户</h4>
             </template>
             <template #default>
-                <ElForm>
+                <ElForm v-loading="roleFormLoading">
                     <ElFormItem label="用户姓名">
                         <ElInput v-model="userRoleParams.username" :disabled="true"></ElInput>
                     </ElFormItem>
@@ -72,8 +83,8 @@
                         <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate"
                             @change="handleCheckAllChange">全选</el-checkbox>
                         <el-checkbox-group v-model="userRole" @change="handleCheckedRoleChange">
-                            <el-checkbox v-for="role in roles" :key="role" :label="role">{{
-                                role
+                            <el-checkbox v-for="role in allRole" :key="role.id" :label="role.id">{{
+                                role.roleName
                             }}</el-checkbox>
                         </el-checkbox-group>
                     </ElFormItem>
@@ -91,8 +102,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive, nextTick } from 'vue';
-import { reqGetUser, reqAddOrUpdateUser } from '@/api/acl/user';
-import type { User } from '@/api/acl/user/type';
+import { reqGetUser, reqAddOrUpdateUser, reqAllRole, reqDoAssignRole, reqRemoveUser, reqRemoveUsers } from '@/api/acl/user';
+import type { User, Role, SetRolesParams } from '@/api/acl/user/type';
 import { FormRules, FormInstance, CheckboxValueType } from 'element-plus';
 
 //#region 分页列表展示相关
@@ -228,50 +239,117 @@ const rules = reactive<FormRules>({
 //#endregion 编辑添加用户相关
 
 //#region 分配角色相关
-let userRoleParams = reactive({
+let userRoleParams = reactive<User>({
     username: '',
-    role: []
 })
 let setRoleDrawer = ref(false)
+let roleFormLoading = ref(false)
 const checkAll = ref(false)
 const isIndeterminate = ref(true)
-const userRole = ref(['Shanghai', 'Beijing'])
-const roles = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen']
+const userRole = ref<number[]>([])
+const allRole = ref<Role[]>([])
 
 const handleCheckAllChange = (val: CheckboxValueType) => {
-    userRole.value = val ? roles : []
+    userRole.value = val ? allRole.value.map((item) => {
+        return item.id!
+    }) : []
     isIndeterminate.value = false
 }
 
 const handleCheckedRoleChange = (val: CheckboxValueType[]) => {
     const checkedCount = val.length
-    checkAll.value = checkedCount === roles.length
-    isIndeterminate.value = checkedCount > 0 && checkedCount < roles.length
+    checkAll.value = checkedCount === allRole.value.length
+    isIndeterminate.value = checkedCount > 0 && checkedCount < allRole.value.length
 }
 
 /**
  * 分配角色按钮回调
  * @param row 
  */
-const setRole = (row: User) => {
+const setRole = async (row: User) => {
     setRoleDrawer.value = true
-    userRoleParams.username = row.username
+    Object.assign(userRoleParams, row)
+    userRole.value = []
+    allRole.value = []
+    roleFormLoading.value = true
+    let result = await reqAllRole(row.id!)
+    roleFormLoading.value = false
+    if (result.code === 200) {
+        allRole.value = result.data.allRolesList
+        userRole.value = result.data.assignRoles.map((item) => {
+            return item.id!
+        })
+    }
 }
 
 /**
  * 分配角色取消按钮回调
  */
 const setRoleCancel = () => {
-
+    setRoleDrawer.value = false
 }
 
 /**
  * 分配角色确认按钮回调
  */
-const setRoleSave = () => {
-
+const setRoleSave = async () => {
+    let params: SetRolesParams = {
+        roleIdList: userRole.value,
+        userId: userRoleParams.id!
+    }
+    let result = await reqDoAssignRole(params)
+    if (result.code === 200) {
+        ElMessage.success('分配角色成功！')
+        setRoleDrawer.value = false
+        getHasUser(pageNo.value)
+    } else {
+        ElMessage.error(`分配角色失败：${result.message}|${result.data}`)
+    }
 }
 //#endregion 分配角色相关
+
+//#region 删除用户
+/**
+ * 删除用户按钮回调
+ * @param row 
+ */
+const deleteUser = async (row: User) => {
+    let result = await reqRemoveUser(row.id!)
+    if (result.code === 200) {
+        ElMessage.success('删除成功！')
+        getHasUser(userArr.value.length > 1 ? pageNo.value : 1)
+    } else {
+        ElMessage.error('删除失败：' + `${result.message}|${result.data}`)
+    }
+}
+let selectUserArr = ref<User[]>([])
+
+/**
+ * table选择框改变回调
+ * @param selection 
+ */
+const selectChange = (selection: User[]) => {
+    selectUserArr.value = selection
+}
+
+/**
+ * 批量删除用户请求
+ */
+const deleteUsers = async () => {
+    let deleteLen = selectUserArr.value.length
+    let idList = selectUserArr.value.map((item) => {
+        return item.id!
+    })
+    let result = await reqRemoveUsers(idList)
+    if (result.code === 200) {
+        ElMessage.success('删除成功！')
+        console.log(deleteLen, 11111111111111)
+        getHasUser(userArr.value.length - deleteLen > 0 ? pageNo.value : 1)
+    } else {
+        ElMessage.error('删除失败：' + `${result.message}|${result.data}`)
+    }
+}
+//#endregion 删除用户
 </script>
 
 <style scoped lang="scss">
