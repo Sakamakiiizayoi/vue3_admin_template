@@ -1,6 +1,6 @@
 //惊喜axios二次封装：使用请求与响应拦截器
 import useUserStore from '@/store/modules/user'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 
 let request = axios.create({
@@ -23,9 +23,16 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use((response) => {
     //成功回调
     return response.data
-}, (error) => {
+}, (error: AxiosError) => {
     //失败回调
     let message = ''
+    if (!error.response) {
+        ElMessage({
+            type: 'error',
+            message: error.message
+        })
+        return Promise.reject(error)
+    }
     let status = error.response.status
     switch (status) {
         case 401:
