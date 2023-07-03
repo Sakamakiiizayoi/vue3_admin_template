@@ -1,13 +1,13 @@
 <template>
     <div>
         <ElCard style="height: 75px;">
-            <ElForm :inline="true" class="search">
+            <ElForm :inline="true" class="search" @submit.native.prevent>
                 <ElFormItem label="用户名:">
-                    <ElInput placeholder="请输入搜索用户名"></ElInput>
+                    <ElInput placeholder="请输入搜索用户名" v-model="keyword" @keydown.enter="search"></ElInput>
                 </ElFormItem>
                 <ElFormItem>
-                    <ElButton type="primary">搜索</ElButton>
-                    <ElButton>重置</ElButton>
+                    <ElButton type="primary" @click="search">搜索</ElButton>
+                    <ElButton @click="reset">重置</ElButton>
                 </ElFormItem>
             </ElForm>
         </ElCard>
@@ -123,7 +123,7 @@ onMounted(() => {
 const getHasUser = async (page = 1) => {
     pageNo.value = page
     tableLoading.value = true
-    let result = await reqGetUser(pageNo.value, limit.value)
+    let result = await reqGetUser(pageNo.value, limit.value, keyword.value)
     tableLoading.value = false
     if (result.code === 200) {
         userArr.value = result.data.records
@@ -308,7 +308,7 @@ const setRoleSave = async () => {
 }
 //#endregion 分配角色相关
 
-//#region 删除用户
+//#region 删除用户相关
 /**
  * 删除用户按钮回调
  * @param row 
@@ -349,7 +349,20 @@ const deleteUsers = async () => {
         ElMessage.error('删除失败：' + `${result.message}|${result.data}`)
     }
 }
-//#endregion 删除用户
+//#endregion 删除用户相关
+
+//#region 搜索栏相关
+const keyword = ref('')
+
+const search = () => {
+    getHasUser()
+}
+
+const reset = () => {
+    keyword.value = ''
+    getHasUser()
+}
+//#endregion 搜索相关
 </script>
 
 <style scoped lang="scss">
