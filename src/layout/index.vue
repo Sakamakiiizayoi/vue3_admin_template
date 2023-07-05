@@ -42,7 +42,7 @@ let $router = useRoute()
         width: $base-menu-width;
         height: 100vh;
         transition: width .3s;
-        border-right: 1px solid #CDD0D6;
+        border-right: 1px solid var(--el-border-color);
         .scrollbar {
             height: calc(100vh - 50px);
 

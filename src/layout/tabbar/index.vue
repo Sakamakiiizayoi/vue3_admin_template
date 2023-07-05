@@ -20,12 +20,14 @@ import Setting from './setting/index.vue';
     height: 100%;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #CDD0D6;
+    border-bottom: 1px solid var(--el-border-color);
+
     .tabbar_left {
         display: flex;
         align-items: center;
     }
-    .tabbar_right{
+
+    .tabbar_right {
         display: flex;
         align-items: center;
     }
