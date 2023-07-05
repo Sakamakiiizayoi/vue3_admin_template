@@ -37,7 +37,7 @@
 import useLayoutSettingStore from '@/store/modules/setting';
 import useUserStore from '@/store/modules/user';
 import { useRoute, useRouter } from 'vue-router';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref } from 'vue';
 
 let userStore = useUserStore()
 let $router = useRouter()
@@ -97,6 +97,7 @@ const darkModel = ref(false)
 const changeDark = () => {
     let html = document.documentElement
     darkModel.value ? html.className = 'dark' : html.className = ''
+    localDrak.set()
 }
 
 /**
@@ -109,20 +110,29 @@ const changeColor = () => {
 }
 
 /**
- * 本地存储主题颜色
+ * 本地存储主题颜色和暗黑模式
  */
 const localColor = {
     get() {
         color.value = localStorage.getItem('THEMECOLOR') || ''
     },
     set() {
-        localStorage.setItem('THEMECOLOR', color.value)
+        localStorage.setItem('THEMECOLOR', color.value ? color.value : '')
     }
 }
-onMounted(() => {
-    localColor.get()
-    changeColor()
-})
+
+const localDrak = {
+    get() {
+        darkModel.value = localStorage.getItem('THEMEDARK') === '1' ? true : false
+    },
+    set() {
+        localStorage.setItem('THEMEDARK', darkModel.value ? '1' : '0')
+    }
+}
+localDrak.get()
+localColor.get()
+changeColor()
+changeDark()
 //#endregion 颜色选择相关
 </script>
 
