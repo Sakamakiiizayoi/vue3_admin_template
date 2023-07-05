@@ -7,12 +7,13 @@ import {
     User, UserFilled, Monitor,
     Goods, ShoppingCartFull, ChromeFilled, Calendar, Orange,
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
-    InfoFilled, Top, Bottom
+    InfoFilled, Top, Bottom, Sunny, Moon
 } from '@element-plus/icons-vue'//手动引入需要的图标
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import autoImportGC from '@/components'
 //引入全局样式
 import '@/styles/index.scss'
+import 'element-plus/theme-chalk/dark/css-vars.css' //暗黑模式样式
 import '@/permisstion'//应用路由鉴权
 import pinia from './store'
 
@@ -30,7 +31,7 @@ let allIcon: { [x: string]: any } = {
     User, UserFilled, Monitor,
     Goods, ShoppingCartFull, ChromeFilled, Calendar, Orange,
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
-    InfoFilled, Top, Bottom
+    InfoFilled, Top, Bottom, Sunny, Moon
 };
 //引入图标
 Object.keys(allIcon).forEach((key) => {

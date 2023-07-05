@@ -19,9 +19,8 @@ import Setting from './setting/index.vue';
     width: 100%;
     height: 100%;
     display: flex;
-    background-color: white;
     justify-content: space-between;
-    border-bottom: 1px solid #DCDFE6;
+    border-bottom: 1px solid #CDD0D6;
     .tabbar_left {
         display: flex;
         align-items: center;

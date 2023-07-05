@@ -1,7 +1,7 @@
 <template>
     <div class="logo">
         <img src="/logo.gif" alt="">
-        <p>{{setting.title}}</p>
+        <el-text truncated class="text">{{setting.title}}</el-text>
     </div>
 </template>
 
@@ -14,7 +14,7 @@ import setting from '@/setting';
     display: flex;
     align-items: center;
     justify-content: left;
-    color: white;
+    color: #303133;
     font-weight: 600;
     width: 100%;
 
@@ -24,11 +24,11 @@ import setting from '@/setting';
         margin-left: 8px;
     }
 
-    p {
+    .text{
+        width: 150px;
+        margin-left: 20px;
+        text-align: center;
         font-size: 20px;
-        margin-left: 10px;
-        white-space: nowrap;
     }
-
 }
 </style>

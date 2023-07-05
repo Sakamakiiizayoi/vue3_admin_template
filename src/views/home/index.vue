@@ -1,15 +1,19 @@
 <template>
-    <ElCard>
-        <div class="box">
-            <ElImage :src="userStore.avatar" style="border-radius: 50%; width:100px; height: 100px;" fit="cover"></ElImage>
-            <div class="text">
-                <div class="title">{{ getTime() }}好 {{ userStore.username }}</div>
-                <div class="des">{{ setting.title }}</div>
+    <div>
+        <ElCard>
+            <div class="box">
+                <ElImage :src="userStore.avatar" style="border-radius: 50%; width:100px; height: 100px;" fit="cover">
+                </ElImage>
+                <div class="text">
+                    <div class="title">{{ getTime() }}好 {{ userStore.username }}</div>
+                    <div class="des">{{ setting.title }}</div>
+                    <el-text tag="i">{{ setting.title }}</el-text>
+                </div>
             </div>
+        </ElCard>
+        <div class="bottom">
+            <svg-icon name="welcome" width="700px" height="500px"></svg-icon>
         </div>
-    </ElCard>
-    <div class="bottom">
-        <svg-icon name="welcome" width="700px" height="500px"></svg-icon>
     </div>
 </template>
 <script setup lang="ts">

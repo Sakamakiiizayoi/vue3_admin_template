@@ -3,7 +3,7 @@
         <div class="layout_slider" :class="layoutSettingStore.fold ? 'fold' : ''">
             <Logo></Logo>
             <el-scrollbar class="scrollbar">
-                <ElMenu background-color="#001529" text-color="white" :router="true" :default-active="$router.path"
+                <ElMenu :router="true" :default-active="$router.path"
                     :collapse="layoutSettingStore.fold" :collapse-transition="false">
                     <Menu :menuList="userStore.menuRoutes"></Menu>
                 </ElMenu>
@@ -38,11 +38,11 @@ let $router = useRoute()
     height: 100vh;
 
     .layout_slider {
-        background-color: #001529;
+        // background-color: #001529;
         width: $base-menu-width;
         height: 100vh;
         transition: width .3s;
-
+        border-right: 1px solid #CDD0D6;
         .scrollbar {
             height: calc(100vh - 50px);
 
@@ -57,7 +57,7 @@ let $router = useRoute()
     }
 
     .layout_tabbar {
-        background-color: aqua;
+        // background-color: aqua;
         width: calc(100% - $base-menu-width);
         height: $base-tabbar-height;
         transition: width .3s;
