@@ -6,8 +6,7 @@
                 </ElImage>
                 <div class="text">
                     <div class="title">{{ getTime() }}好 {{ userStore.username }}</div>
-                    <div class="des">{{ setting.title }}</div>
-                    <el-text tag="i">{{ setting.title }}</el-text>
+                    <el-text class="des" type="info">{{ setting.title }}</el-text>
                 </div>
             </div>
         </ElCard>
@@ -38,7 +37,7 @@ let userStore = useUserStore()
         }
 
         .des {
-            color: #909399;
+            font-size: 16px;
             font-style: italic;
         }
     }
