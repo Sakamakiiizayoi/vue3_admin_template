@@ -10,12 +10,11 @@
                         @click="addPermission(row)">{{
                             row.level === 3 ? '添加功能' : '添加菜单' }}
                     </ElButton>
-                    <ElButton type="warning" size="small" icon="Edit" :disabled="row.level === 1 ? true : false"
-                        @click="updatePermission(row)">编辑
+                    <ElButton type="warning" size="small" icon="Edit" @click="updatePermission(row)">编辑
                     </ElButton>
                     <ElPopconfirm :title="`确认删除'${row.name}'？`" @confirm="removePermission(row)" width="250px">
                         <template #reference>
-                            <ElButton type="danger" size="small" icon="Delete" :disabled="row.level === 1 ? true : false">删除
+                            <ElButton type="danger" size="small" icon="Delete">删除
                             </ElButton>
                         </template>
                     </ElPopconfirm>
