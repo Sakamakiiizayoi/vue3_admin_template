@@ -28,10 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ConstantRouteType } from '@/router/routes';
+import { ConstantRoute } from '@/router/routes';
 
 const props = defineProps(['menuList'])
-let data: ConstantRouteType = props.menuList
+let data: typeof ConstantRoute = props.menuList
 
 </script>
 <script lang="ts">
