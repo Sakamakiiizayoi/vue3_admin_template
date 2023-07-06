@@ -16,15 +16,9 @@ import '@/styles/index.scss'
 import 'element-plus/theme-chalk/dark/css-vars.css' //暗黑模式样式
 import '@/permisstion'//应用路由鉴权
 import pinia from './store'
+import useUserStore from './store/modules/user'
 
 const app = createApp(App)
-
-
-//安装自动导入本地组件插件
-// app.use(autoImportGC)
-//注册路由
-app.use(router)
-app.use(pinia)
 
 let allIcon: { [x: string]: any } = {
     HomeFilled, Platform, Lock,
@@ -38,12 +32,17 @@ Object.keys(allIcon).forEach((key) => {
     app.component(key, allIcon[key])
 })
 
-//注册所有图标组件
-// for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-//     if (needIcon.includes(key)) { //只注册需要的图标
-//         app.component(key, component)
-//         // console.log(key);
-//     }
-// }
+//安装自动导入本地组件插件
+// app.use(autoImportGC)
+//注册插件
+app.use(pinia)
 
-app.mount('#app')
+let userStore = useUserStore()
+userStore.userInfo().then(() => { //获取完用户信息后再注册路由组件和挂载app
+    app.use(router)
+    app.mount('#app')
+}).catch(() => {
+    app.use(router)
+    app.mount('#app')
+})
+

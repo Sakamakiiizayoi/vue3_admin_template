@@ -1,4 +1,5 @@
-export const ConstantRoute = [
+import type { RouteRecordRaw } from 'vue-router';
+export const ConstantRoute: RouteRecordRaw[] = [
     {
         path: '/login',
         component: () => import('@/views/login/index.vue'),
@@ -39,16 +40,6 @@ export const ConstantRoute = [
         }
     },
     {
-        //未匹配路由则重定向到404
-        path: '/:pathMatch(.*)*',
-        redirect: '/404',
-        name: 'Any',
-        meta: {
-            title: '任意路由',
-            hidden: true
-        }
-    },
-    {
         path: '/screen',
         component: () => import('@/views/screen/index.vue'),
         name: 'Screen',
@@ -56,7 +47,10 @@ export const ConstantRoute = [
             title: '数据大屏',
             icon: 'Platform'
         }
-    },
+    }
+]
+
+export const permissionRoute: RouteRecordRaw[] = [
     {
         path: '/acl',
         component: () => import('@/layout/index.vue'),
@@ -144,7 +138,17 @@ export const ConstantRoute = [
             },
         ]
     },
-
 ]
 
-export type ConstantRouteType = typeof ConstantRoute
+export const anyRoute: RouteRecordRaw[] = [
+    {
+        //未匹配路由则重定向到404
+        path: '/:pathMatch(.*)*',
+        redirect: '/404',
+        name: 'Any',
+        meta: {
+            title: '任意路由',
+            hidden: true
+        }
+    },
+]

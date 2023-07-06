@@ -38,6 +38,7 @@ import useLayoutSettingStore from '@/store/modules/setting';
 import useUserStore from '@/store/modules/user';
 import { useRoute, useRouter } from 'vue-router';
 import { ref } from 'vue';
+import {permissionRoute} from '@/router/routes';
 
 let userStore = useUserStore()
 let $router = useRouter()
@@ -69,6 +70,15 @@ const fullScreen = () => {
 const logout = async () => {
     await userStore.userLogout()
     $router.push({ path: '/login', query: { redirect: $route.path } })
+    //清空主题设置
+    color.value = ''
+    darkModel.value = false
+    changeColor()
+    changeDark()
+    //删除所有权限路由
+    permissionRoute.forEach((route) => {
+        $router.removeRoute(route.name!)
+    })
 }
 
 //#region 主题颜色选择相关
