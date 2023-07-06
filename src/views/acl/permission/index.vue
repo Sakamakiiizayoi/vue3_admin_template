@@ -128,7 +128,7 @@ const removePermission = async (row: Permission) => {
         ElMessage.success('删除成功！')
         getHasPermission()
     } else {
-        ElMessage.error('删除失败！')
+        ElMessage.error(`删除失败：${result.message}|${result.data}`)
     }
 }
 //#endregion 删除菜单相关
