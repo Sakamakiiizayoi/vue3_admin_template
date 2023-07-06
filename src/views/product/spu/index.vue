@@ -3,7 +3,7 @@
         <Category :scene="scene"></Category>
         <ElCard style="margin-top: 10px;">
             <div v-show="scene === 0">
-                <ElButton type="primary" icon="Plus" @click="addSpu" :disabled="categoryStore.c3Id ? false : true">
+                <ElButton type="primary" icon="Plus" @click="addSpu" :disabled="categoryStore.c3Id ? false : true" v-has="'btn.Spu.add'">
                     添加SPU
                 </ElButton>
                 <ElTable v-loading="loading" :border="true" class="table" :data="records">
@@ -12,15 +12,15 @@
                     <ElTableColumn label="SPU描述" prop="description" show-overflow-tooltip></ElTableColumn>
                     <ElTableColumn label="SPU操作">
                         <template #="{ row }">
-                            <ElButton type="primary" size="small" icon="Plus" title="添加SKU" @click="addSku(row)"></ElButton>
-                            <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)">
+                            <ElButton type="primary" size="small" icon="Plus" title="添加SKU" @click="addSku(row)" v-has="'btn.Sku.add'"></ElButton>
+                            <ElButton type="warning" size="small" icon="Edit" title="修改SPU" @click="updateSpu(row)" v-has="'btn.Spu.update'">
                             </ElButton>
                             <ElButton type="info" size="small" icon="View" title="查看SKU列表" @click="showSkuList(row)">
                             </ElButton>
                             <ElPopconfirm :title="`确认删除${row.spuName}SPU？`" width="250px" icon="Delete"
                                 @confirm="deleteSpu(row.id)">
                                 <template #reference>
-                                    <ElButton type="danger" size="small" icon="Delete" title="删除SPU"></ElButton>
+                                    <ElButton type="danger" size="small" icon="Delete" title="删除SPU" v-has="'btn.Spu.remove'"></ElButton>
                                 </template>
                             </ElPopconfirm>
                         </template>

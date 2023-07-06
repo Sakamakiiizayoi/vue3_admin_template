@@ -14,12 +14,12 @@
             <ElTableColumn label="操作" width="250px" show-overflow-tooltip fixed="right">
                 <template #="{ row }">
                     <ElButton size="small" :type="row.isSale === 0 ? 'success' : 'primary'"
-                        :icon="row.isSale === 0 ? 'Top' : 'Bottom'" @click="updateSale(row)"></ElButton>
-                    <ElButton size="small" type="warning" icon="Edit" @click="edit"></ElButton>
+                        :icon="row.isSale === 0 ? 'Top' : 'Bottom'" @click="updateSale(row)" v-has="'btn.Sku.updown'"></ElButton>
+                    <ElButton size="small" type="warning" icon="Edit" @click="edit" v-has="'btn.Sku.update'"></ElButton>
                     <ElButton size="small" type="info" icon="InfoFilled" @click="findSku(row)"></ElButton>
                     <ElPopconfirm :title="`确认删除${row.skuName}品牌？`" width="250px" icon="Delete" @confirm="deleteSku(row)">
                         <template #reference>
-                            <ElButton size="small" type="danger" icon="Delete"></ElButton>
+                            <ElButton size="small" type="danger" icon="Delete" v-has="'btn.Sku.remove'"></ElButton>
                         </template>
                     </ElPopconfirm>
 

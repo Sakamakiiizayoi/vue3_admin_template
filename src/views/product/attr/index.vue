@@ -3,7 +3,7 @@
         <Category :scene="scene" />
         <el-card style="margin-top: 10px;">
             <div v-show="scene === 0">
-                <ElButton type="primary" icon="Plus" @click="addAttrHandler" :disabled="categoryStore.c3Id ? false : true">
+                <ElButton type="primary" icon="Plus" @click="addAttrHandler" :disabled="categoryStore.c3Id ? false : true" v-has="'btn.Attr.add'">
                     添加平台属性
                 </ElButton>
                 <ElTable v-loading="loading" :border="true" class="table" :data="attrArr">
@@ -18,11 +18,11 @@
                     </ElTableColumn>
                     <ElTableColumn label="操作" width="120px">
                         <template #="{ row }">
-                            <ElButton type="warning" size="small" icon="Edit" @click="updateAttr(row)"></ElButton>
+                            <ElButton type="warning" size="small" icon="Edit" @click="updateAttr(row)" v-has="'btn.Attr.update'"></ElButton>
                             <ElPopconfirm :title="`确认删除${row.attrName}属性？`" width="250px" icon="Delete"
                                 @confirm="deleteAttr(row.id)">
                                 <template #reference>
-                                    <ElButton type="danger" size="small" icon="Delete"></ElButton>
+                                    <ElButton type="danger" size="small" icon="Delete" v-has="'btn.Attr.remove'"></ElButton>
                                 </template>
                             </ElPopconfirm>
                         </template>

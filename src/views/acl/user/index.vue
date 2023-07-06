@@ -12,10 +12,10 @@
             </ElForm>
         </ElCard>
         <ElCard style="margin-top: 10px;">
-            <ElButton type="primary" @click="addUser">添加用户</ElButton>
+            <ElButton type="primary" @click="addUser" v-has="'btn.User.add'">添加用户</ElButton>
             <ElPopconfirm :title="`确认删除选中用户吗？`" width="250px" icon="Delete" @confirm="deleteUsers">
                 <template #reference>
-                    <ElButton type="danger" :disabled="selectUserArr.length === 0">批量删除</ElButton>
+                    <ElButton type="danger" :disabled="selectUserArr.length === 0" v-has="'btn.User.remove'">批量删除</ElButton>
                 </template>
             </ElPopconfirm>
             <ElTable v-loading="tableLoading" border style="margin: 10px 0;" :data="userArr"
@@ -30,13 +30,13 @@
                 <ElTableColumn label="更新时间" prop="updateTime"></ElTableColumn>
                 <ElTableColumn label="操作" width="300px">
                     <template #="{ row }">
-                        <ElButton size="small" type="primary" icon="User" @click="setRole(row)">分配角色</ElButton>
-                        <ElButton size="small" type="warning" icon="Edit" @click="updateUser(row)">编辑</ElButton>
+                        <ElButton size="small" type="primary" icon="User" @click="setRole(row)" v-has="'btn.User.assgin'">分配角色</ElButton>
+                        <ElButton size="small" type="warning" icon="Edit" @click="updateUser(row)" v-has="'btn.User.update'">编辑</ElButton>
 
                         <ElPopconfirm :title="`确认删除${row.username}吗？`" width="250px" icon="Delete"
                             @confirm="deleteUser(row)">
                             <template #reference>
-                                <ElButton size="small" type="danger" icon="Delete">删除</ElButton>
+                                <ElButton size="small" type="danger" icon="Delete" v-has="'btn.User.remove'">删除</ElButton>
                             </template>
                         </ElPopconfirm>
                     </template>

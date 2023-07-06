@@ -17,6 +17,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css' //暗黑模式样式
 import '@/permisstion'//应用路由鉴权
 import pinia from './store'
 import useUserStore from './store/modules/user'
+import { isHasButton } from './directive/has'
 
 const app = createApp(App)
 
@@ -36,6 +37,7 @@ Object.keys(allIcon).forEach((key) => {
 // app.use(autoImportGC)
 //注册插件
 app.use(pinia)
+app.use(isHasButton)
 
 let userStore = useUserStore()
 userStore.userInfo().then(() => { //获取完用户信息后再注册路由组件和挂载app

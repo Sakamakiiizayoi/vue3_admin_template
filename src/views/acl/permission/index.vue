@@ -7,14 +7,14 @@
             <ElTableColumn label="操作">
                 <template #="{ row }">
                     <ElButton type="primary" size="small" icon="Plus" :disabled="row.level === 4 ? true : false"
-                        @click="addPermission(row)">{{
+                        @click="addPermission(row)" v-has="'btn.Permission.add'">{{
                             row.level === 3 ? '添加功能' : '添加菜单' }}
                     </ElButton>
-                    <ElButton type="warning" size="small" icon="Edit" @click="updatePermission(row)">编辑
+                    <ElButton type="warning" size="small" icon="Edit" @click="updatePermission(row)" v-has="'btn.Permission.update'">编辑
                     </ElButton>
                     <ElPopconfirm :title="`确认删除'${row.name}'？`" @confirm="removePermission(row)" width="250px">
                         <template #reference>
-                            <ElButton type="danger" size="small" icon="Delete">删除
+                            <ElButton type="danger" size="small" icon="Delete" v-has="'btn.Permission.remove'">删除
                             </ElButton>
                         </template>
                     </ElPopconfirm>

@@ -39,7 +39,8 @@ let useUserStore = defineStore('User', {
             token: TOKEN.getToken(),
             menuRoutes: <RouteRecordRaw[]>[],
             username: '',
-            avatar: ''
+            avatar: '',
+            buttons: <string[]>[]
         }
     },
     actions: {
@@ -60,6 +61,7 @@ let useUserStore = defineStore('User', {
             if (result.code === 200) {
                 this.username = result.data.name
                 this.avatar = result.data.avatar
+                this.buttons = result.data.buttons
                 //过滤用户权限路由
                 let userRoute = filterRoute(permissionRoute, result.data.routes)
                 this.menuRoutes = [...ConstantRoute, ...userRoute, ...anyRoute];

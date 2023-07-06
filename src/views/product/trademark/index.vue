@@ -1,7 +1,7 @@
 <template>
     <div>
         <ElCard>
-            <ElButton type="primary" icon="Plus" @click="addTrademark">添加品牌</ElButton>
+            <ElButton type="primary" icon="Plus" @click="addTrademark" v-has="'btn.Trademark.add'">添加品牌</ElButton>
             <!-- 表格 -->
             <ElTable v-loading="loading" :border="true" :data="trademarkArr" class="table">
                 <ElTableColumn label="序号" width="80px" align="center" type="index"></ElTableColumn>
@@ -18,11 +18,11 @@
                 </ElTableColumn>
                 <ElTableColumn label="品牌操作">
                     <template #="{ row }">
-                        <ElButton type="primary" size="small" icon="Edit" @click="updateTrademark(row)"></ElButton>
+                        <ElButton type="primary" size="small" icon="Edit" @click="updateTrademark(row)" v-has="'btn.Trademark.update'"></ElButton>
                         <ElPopconfirm :title="`确认删除${row.tmName}品牌？`" width="250px" icon="Delete"
                             @confirm="removeTrademark(row.id)">
                             <template #reference>
-                                <ElButton type="primary" size="small" icon="Delete"></ElButton>
+                                <ElButton type="primary" size="small" icon="Delete" v-has="'btn.Trademark.remove'"></ElButton>
                             </template>
                         </ElPopconfirm>
                     </template>

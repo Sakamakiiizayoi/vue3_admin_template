@@ -12,7 +12,7 @@
             </ElForm>
         </ElCard>
         <ElCard style="margin-top: 10px;">
-            <ElButton type="primary" @click="addRole">添加角色</ElButton>
+            <ElButton type="primary" @click="addRole" v-has="'btn.Role.add'">添加角色</ElButton>
             <ElTable v-loading="tableLoading" border style="margin: 10px 0;" :data="roleArr">
                 <ElTableColumn type="index" label="#"></ElTableColumn>
                 <ElTableColumn label="ID" prop="id"></ElTableColumn>
@@ -21,12 +21,12 @@
                 <ElTableColumn label="更新时间" prop="updateTime"></ElTableColumn>
                 <ElTableColumn label="操作" width="300px">
                     <template #="{ row }">
-                        <ElButton size="small" type="primary" icon="User" @click="setPermission(row)">分配权限</ElButton>
-                        <ElButton size="small" type="warning" icon="Edit" @click="updateRole(row)">编辑</ElButton>
+                        <ElButton size="small" type="primary" icon="User" @click="setPermission(row)" v-has="'btn.Role.assgin'">分配权限</ElButton>
+                        <ElButton size="small" type="warning" icon="Edit" @click="updateRole(row)" v-has="'btn.Role.update'">编辑</ElButton>
                         <ElPopconfirm :title="`确认删除角色‘${row.roleName}’吗？`" width="250px" icon="Delete"
                             @confirm="deleteRole(row)">
                             <template #reference>
-                                <ElButton size="small" type="danger" icon="Delete">删除</ElButton>
+                                <ElButton size="small" type="danger" icon="Delete" v-has="'btn.Role.remove'">删除</ElButton>
                             </template>
                         </ElPopconfirm>
                     </template>
