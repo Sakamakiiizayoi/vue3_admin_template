@@ -41,12 +41,32 @@ export const ConstantRoute: RouteRecordRaw[] = [
     },
     {
         path: '/screen',
-        component: () => import('@/views/screen/index.vue'),
+        component: () => import('@/views/dataScreen/index.vue'),
         name: 'Screen',
         meta: {
             title: '数据大屏',
             icon: 'Platform'
         }
+    },
+    {
+        path: '/data',
+        component: () => import('@/layout/index.vue'),
+        name: 'Data',
+        meta: {
+            title: '',
+        },
+        redirect: '/data/view',
+        children: [
+            {
+                path: '/data/view',
+                component: () => import('@/views/dataVisualize/index.vue'),
+                name: 'Data',
+                meta: {
+                    title: '数据可视化',
+                    icon: 'TrendCharts'
+                }
+            },
+        ]
     }
 ]
 
