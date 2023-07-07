@@ -104,12 +104,12 @@ export type SkuData = {
         valueId: number
     }>
     skuImageList?: Array<{
-        id: number
+        id?: number
         imgName: string
         imgUrl: string
-        isDefault: string
-        skuId: number
-        spuImgId: number
+        isDefault?: string
+        skuId?: number
+        spuImgId?: number
     }>
     skuSaleAttrValueList?: Array<{
         saleAttrId: number

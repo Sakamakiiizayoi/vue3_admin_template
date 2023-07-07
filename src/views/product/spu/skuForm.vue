@@ -82,6 +82,7 @@ let skuParams = reactive<SkuData>({
     weight: '',
     skuAttrValueList: [],
     skuSaleAttrValueList: [],
+    skuImageList: []
 })
 
 let emit = defineEmits(['changeScene'])
@@ -111,6 +112,7 @@ const resetData = () => {
         weight: '',
         skuAttrValueList: [],
         skuSaleAttrValueList: [],
+        skuImageList: []
     })
     attrArr.value = []
     saleArr.value = []
@@ -158,6 +160,14 @@ const save = async () => {
         }
         return prev
     }, <{ saleAttrId: number, saleAttrValueId: number }[]>[])
+    skuParams.skuImageList = imgArr.value.map((img) => {
+        return{
+            imgName: img.imgName,
+            imgUrl: img.imgUrl,
+        }
+    })
+
+
     let result = await reqAddSku(skuParams)
     if (result.code === 200) {
         ElMessage.success('添加成功')
