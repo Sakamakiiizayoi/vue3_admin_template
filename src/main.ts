@@ -7,7 +7,7 @@ import {
     User, UserFilled, Monitor,
     Goods, ShoppingCartFull, ChromeFilled, Calendar, Orange,
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
-    InfoFilled, Top, Bottom, Sunny, Moon
+    InfoFilled, Top, Bottom, Sunny, Moon, TrendCharts
 } from '@element-plus/icons-vue'//手动引入需要的图标
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import autoImportGC from '@/components'
@@ -26,7 +26,7 @@ let allIcon: { [x: string]: any } = {
     User, UserFilled, Monitor,
     Goods, ShoppingCartFull, ChromeFilled, Calendar, Orange,
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
-    InfoFilled, Top, Bottom, Sunny, Moon
+    InfoFilled, Top, Bottom, Sunny, Moon, TrendCharts
 };
 //引入图标
 Object.keys(allIcon).forEach((key) => {
