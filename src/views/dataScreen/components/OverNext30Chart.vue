@@ -76,7 +76,7 @@ const initChart = (data: any = {}): ECharts => {
         data: initDate()
       }
     ],
-    yAxis: data.unit.map((val: ChartProp, index: number) => {
+    yAxis: data.unit.map((_val: ChartProp, index: number) => {
       return {
         name: "(访问量)",
         nameTextStyle: {
