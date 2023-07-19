@@ -1,18 +1,27 @@
-# Vue 3 + TypeScript + Vite
+# Vue 3 Admin Template
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+本项目是由Vue3 + Ts + Vite开发运营后台管理系统界面模板，本项目不包含后端接口，如需使用请查看下方后端接口文档自行搭建后端使用。
 
-## Recommended IDE Setup
+## swagger后端接口文档地址
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [后台管理系统-API文档1](http://39.98.123.211:8510/swagger-ui.html#/)
+- [后台管理系统-API文档2](http://139.198.104.58:8212/swagger-ui.html#/)
 
-## Type Support For `.vue` Imports in TS
+## 项目目录结构
+* .vscode #vscode配置文件
+* mock #mock测试接口
+* public #
+* src #
+    * api #后端接口封装
+    * assets #
+        * icons #svg图标文件夹
+    * components #组件目录
+    * directive #自定义指令插件
+    * hooks #组件方法封装
+    * layout #layout组件
+    * router #路由组件
+    * store #pinia仓库
+    * styles #全局scss样式
+    * utils #常用函数封装
+    * views #路由相关组件
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
