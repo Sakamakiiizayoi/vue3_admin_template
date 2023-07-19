@@ -7,7 +7,7 @@ import { UserConfigExport, ConfigEnv } from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-// import compressPlugin from 'vite-plugin-compression'
+import compressPlugin from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default ({ command }: ConfigEnv): UserConfigExport => {
@@ -20,10 +20,10 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-      // compressPlugin({
-      //   ext: '.gz',
-      //   deleteOriginFile: false
-      // }),
+      compressPlugin({
+        ext: '.gz',
+        deleteOriginFile: false
+      }),
       createSvgIconsPlugin({
         // Specify the icon folder to be cached
         iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
