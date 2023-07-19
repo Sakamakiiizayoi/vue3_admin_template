@@ -158,6 +158,87 @@ export const permissionRoute: RouteRecordRaw[] = [
             },
         ]
     },
+    {
+        path:'/order',
+        component: () => import('@/layout/index.vue'),
+        name: 'Order',
+        meta: {
+            title: '订单管理',
+            icon: 'Tickets'
+        },
+        redirect: '/order/orderList',
+        children: [
+            {
+                path: '/order/orderList',
+                component: () => import('@/views/order/orderList/index.vue'),
+                name: 'OrderList',
+                meta: {
+                    title: '订单列表',
+                    icon: 'Document'
+                }
+            },
+            {
+                path: '/order/refund',
+                component: () => import('@/views/order/refund/index.vue'),
+                name: 'Refund',
+                meta: {
+                    title: '退款管理',
+                    icon: 'Memo'
+                }
+            },
+        ]
+    },
+    {
+        path:'/clientUser',
+        component: () => import('@/layout/index.vue'),
+        name: 'ClientUser',
+        meta: {
+            title: '客户管理',
+            icon: 'Avatar'
+        },
+        redirect: '/clientUser/userList',
+        children: [
+            {
+                path: '/clientUser/userList',
+                component: () => import('@/views/clientUser/userList/index.vue'),
+                name: 'UserList',
+                meta: {
+                    title: '客户列表',
+                    icon: 'Postcard'
+                }
+            },
+        ]
+    },
+    {
+        path:'/discount',
+        component: () => import('@/layout/index.vue'),
+        name: 'Discount',
+        meta: {
+            title: '优惠管理',
+            icon: 'Present'
+        },
+        redirect: '/discount/userList',
+        children: [
+            {
+                path: '/discount/activity',
+                component: () => import('@/views/discount/activity/index.vue'),
+                name: 'Activity',
+                meta: {
+                    title: '优惠活动管理',
+                    icon: 'List'
+                }
+            },
+            {
+                path: '/discount/coupon',
+                component: () => import('@/views/discount/coupon/index.vue'),
+                name: 'Coupon',
+                meta: {
+                    title: '优惠券管理',
+                    icon: 'Ticket'
+                }
+            },
+        ]
+    }
 ]
 
 export const anyRoute: RouteRecordRaw[] = [
