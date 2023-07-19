@@ -16,7 +16,7 @@
             <ElButton title="设置" type="default" icon="Setting" circle></ElButton>
         </template>
     </ElPopover>
-    <ElImage style="width: 30px;height: 30px; margin:0 10px;border-radius: 50%;" src="/logo.gif" fit="cover">
+    <ElImage style="width: 30px;height: 30px; margin:0 10px;border-radius: 50%;" :src="userStore.avatar" fit="cover">
     </ElImage>
     <el-dropdown>
         <span class="el-dropdown-link">
