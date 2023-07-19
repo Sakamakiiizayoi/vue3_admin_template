@@ -110,7 +110,8 @@ const rules = reactive<FormRules>({
 .login_container {
     width: 100%;
     height: 100vh;
-    background-image: url('/bg.jpg');
+    background: url('/bg.jpg') no-repeat;
+    background-size: cover;
 
     .login_form {
         padding: 20px;
