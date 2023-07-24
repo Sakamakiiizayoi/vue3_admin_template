@@ -90,8 +90,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { reqOrderPage } from '@/api/order/index';
-import type { Order, OrderDetail } from '@/api/order/type';
+import { reqOrderPage } from '@/api/order/orderList/index';
+import type { Order, OrderDetail } from '@/api/order/orderList/type';
 import { reqGetSkuById } from '@/api/product/sku';
 import { SkuData } from '@/api/product/sku/type';
 
