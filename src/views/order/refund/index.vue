@@ -114,7 +114,7 @@ onMounted(() => {
 })
 
 /**
- * 获取用户分页列表
+ * 获取退款分页列表
  * @param page 
  */
 const getHasRefund = async (page = 1) => {
