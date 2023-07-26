@@ -49,7 +49,7 @@
                 <ElTableColumn label="操作" fixed="right" width="90px">
                     <template #="{ row }">
                         <ElButton size="small" :type="row.status ? 'danger' : 'success'"
-                            :icon="row.status ? 'lock' : 'Unlock'" @click="lockUser(row)">{{ row.status ? '锁定' : '解锁' }}
+                            :icon="row.status ? 'lock' : 'Unlock'" @click="lockUser(row)" v-has="'btn.UserList.lock'">{{ row.status ? '锁定' : '解锁' }}
                         </ElButton>
                     </template>
                 </ElTableColumn>
