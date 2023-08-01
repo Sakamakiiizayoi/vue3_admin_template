@@ -9,7 +9,7 @@ import {
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
     InfoFilled, Top, Bottom, Sunny, Moon, TrendCharts, Tickets, Document, Memo,
     Postcard, List, Ticket, Present, DocumentChecked, CircleCheckFilled, CircleCloseFilled,
-    Unlock
+    Unlock, Search
 } from '@element-plus/icons-vue'//手动引入需要的图标
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import autoImportGC from '@/components'
@@ -30,7 +30,7 @@ let allIcon: { [x: string]: any } = {
     Refresh, FullScreen, Setting, ArrowDown, Plus, Edit, Delete, Check, View,
     InfoFilled, Top, Bottom, Sunny, Moon, TrendCharts, Tickets, Document, Memo,
     Postcard, List, Ticket, Present, DocumentChecked, CircleCheckFilled, CircleCloseFilled,
-    Unlock
+    Unlock, Search
 };
 //引入图标
 Object.keys(allIcon).forEach((key) => {
