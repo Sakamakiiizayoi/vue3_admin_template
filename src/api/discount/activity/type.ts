@@ -34,3 +34,63 @@ export type ActivityPageData = {
 export interface ActivityPageResponseData extends ResponseData {
     data: ActivityPageData
 }
+
+export type ActivityRule = {
+    activityId?: number
+    activityType?: string
+    benefitAmount?: number
+    benefitDiscount?: number
+    benefitLevel?: number
+    conditionAmount?: number
+    conditionNum?: number
+    id?: number
+    reduceAmount?: number
+    skuId?: number
+    skuIdList?: Array<number>
+}
+
+export type ActivitySku = {
+    activityId?: number
+    id?: number
+    skuId: number
+}
+
+export type ActivityRuleParams = {
+    activityId?: number
+    activityRuleList: Array<ActivityRule>
+    activitySkuList: Array<ActivitySku>
+    couponIdList: Array<number>
+}
+
+export type SkuInfo = {
+    id: number
+    spuId: number
+    price: number
+    skuName: string
+    skuDesc: string
+    weight: string
+    tmId: number
+    category3Id: number
+    skuDefaultImg: string
+    isSale: number
+    createTime: string
+    skuImageList: null
+    skuAttrValueList: null
+    skuSaleAttrValueList: null
+}
+
+export interface FindSkuResponseData extends ResponseData {
+    data: SkuInfo[]
+}
+
+export interface FindActivityRuleListResponesData extends ResponseData{
+    data: {
+        couponInfoList: number[]
+        activityRuleList: ActivityRule[]
+        skuInfoList: SkuInfo[] | null
+    }
+}
+
+export interface GetActivityResponesData extends ResponseData{
+    data: Activity
+}
