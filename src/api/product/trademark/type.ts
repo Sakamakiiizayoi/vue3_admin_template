@@ -28,7 +28,11 @@ export type Records = Trademark[]
 
 export type ResponseData = {
     code: number,
-    data: null,
+    data?: any,
     message: string,
     ok: boolean
+}
+
+export interface FindTrademarkResponseData extends ResponseData{
+    data: Trademark[]
 }

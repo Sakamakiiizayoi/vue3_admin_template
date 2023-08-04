@@ -120,3 +120,7 @@ export type SkuData = {
 export interface SkuListResponse extends ResponseData {
     data: SkuData[]
 }
+
+export interface FindSpuByKeywordResponseData extends ResponseData {
+    data: SpuData[]
+}
