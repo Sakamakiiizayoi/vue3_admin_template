@@ -5,58 +5,61 @@ export type ResponseData = {
     data?: any
 }
 
-export type OrderDetail = {
-    id: number
-    orderId: number
-    skuId: number
-    skuName: string
-    imgUrl: string
-    orderPrice: number
-    skuNum: number
-    createTime: string
-    sourceType: string
-    sourceId: number
-    splitTotalAmount: number
-    splitActivityAmount: number
-    splitCouponAmount: number
-    refundStatus: string
-    refundStatusString: string
-    hasStock: null
-    activityRule: null
-    couponInfoList: null
+export interface OrderDetailList {
+    id: number;
+    createTime: string;
+    updateTime: string;
+    orderId: number;
+    skuId: number;
+    skuName: string;
+    imgUrl: string;
+    orderPrice: number;
+    skuNum: number;
+    sourceType: string;
+    sourceId: number;
+    splitTotalAmount: number;
+    splitActivityAmount: number;
+    splitCouponAmount: number;
+    wareId: number;
+    refundStatus: string;
+    refundStatusString: string;
+    hasStock?: any;
+    activityRule?: any;
+    couponInfoList?: any;
 }
 
-export type Order = {
-    id: number
-    consignee: string
-    consigneeTel: string
-    totalAmount: number
-    orderStatus: string
-    userId: number
-    paymentWay: string
-    deliveryAddress: string
-    orderComment: string
-    outTradeNo: string
-    tradeBody: string
-    createTime: string
-    operateTime: null
-    expireTime: string
-    processStatus: string
-    trackingNo: null
-    parentOrderId: null
-    imgUrl: null
-    provinceId: null
-    activityReduceAmount: null
-    couponAmount: null
-    originalTotalAmount: null
-    feightFee: null
-    feightFeeReduce: null
-    refundableTime: null
-    orderDetailList: Array<OrderDetail>
-    orderDetailVoList: null
-    orderStatusName: string
-    wareId: null
-    couponInfo: null
+export interface Order {
+    id?: number;
+    createTime?: string;
+    updateTime?: string;
+    consignee?: string;
+    consigneeTel?: string;
+    totalAmount?: number;
+    orderStatus?: string;
+    userId?: number;
+    paymentWay?: string;
+    deliveryAddress?: string;
+    orderComment?: string;
+    outTradeNo?: string;
+    tradeBody?: string;
+    operateTime?: string;
+    expireTime?: string;
+    processStatus?: string;
+    trackingNo?: any;
+    parentOrderId?: any;
+    imgUrl?: any;
+    provinceId?: number;
+    activityReduceAmount?: number;
+    couponAmount?: number;
+    originalTotalAmount?: number;
+    feightFee?: number;
+    feightFeeReduce?: number;
+    refundableTime?: string;
+    orderDetailList?: OrderDetailList[];
+    orderDetailVoList?: any;
+    orderStatusName?: string;
+    wareId?: any;
+    couponInfo?: any;
 }
 
 export type OrderData = {
@@ -70,4 +73,14 @@ export type OrderData = {
 
 export interface OrderPageResponseData extends ResponseData {
     data: OrderData
+}
+
+export interface OrderDetailResponseData extends ResponseData {
+    data: {
+        time1: string;
+        time4: string;
+        orderInfo: Order;
+        date4: string;
+        date1: string;
+    }
 }

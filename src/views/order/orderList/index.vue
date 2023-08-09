@@ -22,16 +22,15 @@
                 <ElTableColumn label="备注" prop="orderComment"></ElTableColumn>
                 <ElTableColumn label="订单编号" prop="outTradeNo" width="170px"></ElTableColumn>
                 <ElTableColumn label="创建时间" prop="createTime" width="170px"></ElTableColumn>
-                <ElTableColumn label="操作时间" prop="operateTime" width="170px"></ElTableColumn>
+                <!-- <ElTableColumn label="操作时间" prop="operateTime" width="170px"></ElTableColumn> -->
                 <ElTableColumn label="过期时间" prop="expireTime" width="170px"></ElTableColumn>
                 <ElTableColumn label="状态" prop="orderStatusName"></ElTableColumn>
-                <ElTableColumn label="订单详情列表" fixed="right" width="430px">
+                <ElTableColumn label="操作" fixed="right" width="320px">
                     <template #="{ row }">
-                        <div style="margin-top: 15px" v-for="(item, index) in row.orderDetailList" :key="index">
-                            <el-badge :value="'x' + item.skuNum" class="item">
-                                <div class="text-overflow" @click="findSku(item)">{{ item.skuName }}</div>
-                            </el-badge>
-                        </div>
+                        <ElButton type="success" size="small" icon="DocumentChecked" @click="recieveOrder(row)">签收
+                        </ElButton>
+                        <ElButton type="info" size="small" icon="InfoFilled" @click="showSkuList(row)">查看商品列表</ElButton>
+                        <ElButton type="info" size="small" icon="InfoFilled" @click="showOrder(row)">订单详情</ElButton>
                     </template>
                 </ElTableColumn>
             </ElTable>
@@ -39,6 +38,101 @@
                 :background="true" layout="prev, pager, next, jumper, ->, sizes, total" :total="total"
                 @current-change="getHasOrder" @size-change="sizeChange" />
         </ElCard>
+        <!-- 显示订单详情Dialog组件 -->
+        <ElDialog v-model="orderDetailDialog" title="订单详情">
+            <div v-loading="orderDetailLoading" class="dt">
+                <ElRow>
+                    <ElCol :span="5">收货人</ElCol>
+                    <ElCol :span="19">{{ orderDetail.consignee }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">商品</ElCol>
+                    <ElCol :span="19">{{ orderDetail.tradeBody }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">收货人手机号</ElCol>
+                    <ElCol :span="19">{{ orderDetail.consigneeTel }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">收货地址</ElCol>
+                    <ElCol :span="19">{{ orderDetail.deliveryAddress }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">订单号</ElCol>
+                    <ElCol :span="19">{{ orderDetail.outTradeNo }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">订单注释</ElCol>
+                    <ElCol :span="19">{{ orderDetail.orderComment }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">订单状态</ElCol>
+                    <ElCol :span="19">{{ orderDetail.orderStatusName }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">总金额</ElCol>
+                    <ElCol :span="19">{{ orderDetail.originalTotalAmount }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">优惠券减免</ElCol>
+                    <ElCol :span="19">{{ orderDetail.couponAmount }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">活动减免</ElCol>
+                    <ElCol :span="19">{{ orderDetail.activityReduceAmount }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">付款金额</ElCol>
+                    <ElCol :span="19">{{ orderDetail.totalAmount }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">支付方式</ElCol>
+                    <ElCol :span="19">{{ orderDetail.paymentWay }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">创建时间</ElCol>
+                    <ElCol :span="19">{{ orderDetail.createTime }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">过期时间</ElCol>
+                    <ElCol :span="19">{{ orderDetail.expireTime }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">操作时间</ElCol>
+                    <ElCol :span="19">{{ orderDetail.operateTime }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">更新时间</ElCol>
+                    <ElCol :span="19">{{ orderDetail.updateTime }}</ElCol>
+                </ElRow>
+                <ElRow>
+                    <ElCol :span="5">可退款时间</ElCol>
+                    <ElCol :span="19">{{ orderDetail.refundableTime }}</ElCol>
+                </ElRow>
+            </div>
+        </ElDialog>
+        <!-- 显示sku列表Dialog组件 -->
+        <ElDialog v-model="skuListDialog" title="商品列表">
+            <ElTable border :data="skuArr" v-loading="skuLoading">
+                <ElTableColumn label="商品名字" prop="skuName" show-overflow-tooltip></ElTableColumn>
+                <ElTableColumn label="单价" prop="orderPrice"></ElTableColumn>
+                <ElTableColumn label="数量" prop="skuNum"></ElTableColumn>
+                <ElTableColumn label="活动优惠" prop="splitActivityAmount"></ElTableColumn>
+                <ElTableColumn label="优惠券优惠" prop="splitCouponAmount"></ElTableColumn>
+                <ElTableColumn label="总计" prop="splitTotalAmount"></ElTableColumn>
+                <ElTableColumn label="退款状态" prop="refundStatusString"></ElTableColumn>
+                <ElTableColumn label="图片">
+                    <template #="{ row }">
+                        <ElImage style="width: 100%;" :src="row.imgUrl" fit="contain"></ElImage>
+                    </template>
+                </ElTableColumn>
+                <ElTableColumn label="商品详情" align="center">
+                    <template #="{ row }">
+                        <ElButton size="small" type="info" icon="InfoFilled" @click="findSku(row)"></ElButton>
+                    </template>
+                </ElTableColumn>
+            </ElTable>
+        </ElDialog>
         <!-- 抽屉组件 -->
         <ElDrawer v-model="drawer" title="查看商品详情" :size="500">
             <div v-loading="drawerLoading" class="dt">
@@ -89,9 +183,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { reqOrderPage } from '@/api/order/orderList/index';
-import type { Order, OrderDetail } from '@/api/order/orderList/type';
+import { ref, onMounted, reactive } from 'vue';
+import { reqOrderPage, reqOrderRecieve, reqOrderShow } from '@/api/order/orderList/index';
+import type { Order, OrderDetailList } from '@/api/order/orderList/type';
 import { reqGetSkuById } from '@/api/product/sku';
 import { SkuData } from '@/api/product/sku/type';
 
@@ -147,12 +241,21 @@ const reset = () => {
 //#region 显示sku详情相关
 const drawer = ref(false)
 const drawerLoading = ref(false)
-let skuDetailData = ref<SkuData>()
+const skuDetailData = ref<SkuData>()
+const skuArr = ref<OrderDetailList[]>([])
+const skuListDialog = ref(false)
+const skuLoading = ref(false)
+
+const showSkuList = (row: Order) => {
+    skuListDialog.value = true
+    skuArr.value = row.orderDetailList!
+}
+
 /**
  * 查看sku详情
  * @param row 
  */
-const findSku = async (row: OrderDetail) => {
+const findSku = async (row: OrderDetailList) => {
     drawer.value = true
     drawerLoading.value = true
     let result = await reqGetSkuById(row.skuId)
@@ -164,6 +267,42 @@ const findSku = async (row: OrderDetail) => {
     }
 }
 //#endregion 显示sku详情相关
+
+//#region 签收相关
+/**
+ * 签收订单按钮回调
+ * @param row 
+ */
+const recieveOrder = async (row: Order) => {
+    let result = await reqOrderRecieve(row.id!)
+    if (result.code === 200) {
+        ElMessage.success('签收成功')
+        getHasOrder(pageNo.value)
+    } else {
+        ElMessage.error(`签收失败：${result.message}|${result.data}`)
+    }
+}
+//#endregion
+
+//#region 订单详情相关
+const orderDetail = reactive<Order>({})
+const orderDetailDialog = ref(false)
+const orderDetailLoading = ref(false)
+
+
+const showOrder = async (row: Order) => {
+    orderDetailDialog.value = true
+    orderDetailLoading.value = true
+    let result = await reqOrderShow(row.id!)
+    orderDetailLoading.value = false
+    if (result.code === 200) {
+        Object.assign(orderDetail, result.data.orderInfo)
+    } else {
+        ElMessage.error(`获取订单详情出错：${result.message}|${result.data}`)
+    }
+}
+//#endregion
+
 </script>
 
 <style scoped lang="scss">
@@ -173,23 +312,14 @@ const findSku = async (row: OrderDetail) => {
 }
 
 
-.text-overflow {
-    text-overflow: ellipsis;
-    width: 400px;
-    overflow: hidden;
-    white-space: nowrap;
-    color: #409EFF;
-
-}
-
-.text-overflow:hover {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 .dt {
     div {
         margin-bottom: 10px;
+        div:first-child{
+            text-align: right;
+            padding-right: 20px;
+            font-weight: 600;
+        }
     }
 }
 </style>
