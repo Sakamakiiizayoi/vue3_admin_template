@@ -22,37 +22,37 @@
                 <div class="traffic-img">
                   <img src="./images/add_person.png" alt="" />
                 </div>
-                <span class="item-value">2222</span>
-                <span class="traffic-name sle">Gitee 访问量</span>
+                <span class="item-value">{{ userNum || '...' }}</span>
+                <span class="traffic-name sle">用户数量</span>
               </div>
               <div class="gitHub-traffic traffic-box">
                 <div class="traffic-img">
-                  <img src="./images/add_team.png" alt="" />
+                  <img src="./images/trademark.png" alt="" />
                 </div>
-                <span class="item-value">2222</span>
-                <span class="traffic-name sle">GitHub 访问量</span>
+                <span class="item-value">{{ trademarkNum || '...' }}</span>
+                <span class="traffic-name sle">品牌数量</span>
               </div>
               <div class="today-traffic traffic-box">
                 <div class="traffic-img">
-                  <img src="./images/today.png" alt="" />
+                  <img src="./images/SKU.png" alt="" />
                 </div>
-                <span class="item-value">4567</span>
-                <span class="traffic-name sle">今日访问量</span>
+                <span class="item-value">{{ skuNum || '...' }}</span>
+                <span class="traffic-name sle">SKU数量</span>
               </div>
               <div class="yesterday-traffic traffic-box">
                 <div class="traffic-img">
                   <img src="./images/book_sum.png" alt="" />
                 </div>
-                <span class="item-value">1234</span>
-                <span class="traffic-name sle">昨日访问量</span>
+                <span class="item-value">{{ orderNum || '...' }}</span>
+                <span class="traffic-name sle">订单数量</span>
               </div>
             </div>
           </el-col>
           <el-col class="mb40" :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
             <div class="item-right">
-              <div class="echarts-title">Gitee / GitHub 访问量占比</div>
+              <div class="echarts-title">订单 / 退款 占比</div>
               <div class="book-echarts">
-                <Pie ref="pieRef" />
+                <Pie :data="pieData" v-if="pieData.length > 0" ref="pieRef" />
               </div>
             </div>
           </el-col>
@@ -77,14 +77,50 @@
 import { ref, onMounted } from "vue";
 import Pie from "./components/pie.vue";
 import Curve from "./components/curve.vue";
+import { reqOrderPage } from '@/api/order/orderList';
+import { reqRefundPage } from '@/api/order/refund';
+import { reqUserPage } from '@/api/clientUser';
+import { reqSkuList } from '@/api/product/sku';
+import { reqHasTrademark } from '@/api/product/trademark';
 
 const tabActive = ref(1);
 const pieRef = ref();
 const curveRef = ref();
 
-onMounted(() => {
-  pieRef.value.initChart(pieData);
+//#region 载入相关数据
+const pieData = ref<{ value: number, name: string }[]>([]);
+const userNum = ref(0)
+const skuNum = ref(0)
+const trademarkNum = ref(0)
+const orderNum = ref(0)
+const refundNum = ref(0)
+/**
+ * 返回订单数量和退单数量
+ */
+const getOrderData = async () => {
+  let order = reqOrderPage(1, 1, '')
+  let refund = reqRefundPage(1, 1)
+  let results = await Promise.all([order, refund])
+  return [results[0].data.total, results[1].data.total]
+}
+
+const getSomeData = async () => {
+  let userResult = reqUserPage(1, 1, '')
+  let skuResult = reqSkuList(1, 1)
+  let trademarkResult = reqHasTrademark(1, 1)
+  let all = await Promise.all([userResult, skuResult, trademarkResult])
+  return [all[0].data.total, all[1].data.total, all[2].data.total]
+}
+//#endregion
+
+onMounted(async () => {
   curveRef.value.initChart(curveData);
+  [orderNum.value, refundNum.value] = await getOrderData();
+  pieData.value = [
+    { value: orderNum.value, name: "订单量" },
+    { value: refundNum.value, name: "退款量" }
+  ];
+  [userNum.value, skuNum.value, trademarkNum.value] = await getSomeData();
 });
 
 const tab = [
@@ -95,20 +131,13 @@ const tab = [
   { label: "近半年", name: 5 },
   { label: "近一年", name: 6 }
 ];
-const pieData = [
-  { value: 5000, name: "Gitee 访问量" },
-  { value: 5000, name: "GitHub 访问量" }
-];
+
 const curveData = [
-  { value: 30, spotName: "掘金" },
-  { value: 90, spotName: "CSDN" },
-  { value: 10, spotName: "Gitee" },
-  { value: 70, spotName: "GitHub" },
-  { value: 20, spotName: "知乎" },
-  { value: 60, spotName: "MyBlog" },
-  { value: 55, spotName: "简书" },
-  { value: 80, spotName: "StackOverFlow" },
-  { value: 50, spotName: "博客园" }
+  { value: 30, spotName: "淘宝" },
+  { value: 90, spotName: "天猫" },
+  { value: 10, spotName: "拼多多" },
+  { value: 70, spotName: "咸鱼" },
+  { value: 20, spotName: "转转" },
 ];
 </script>
 

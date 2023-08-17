@@ -3,17 +3,19 @@
   <div ref="echartsRef" class="echarts"></div>
 </template>
 <script setup lang="ts" name="pie">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 
+const props = defineProps(['data'])
 const echartsRef = ref<HTMLElement>();
+
 const initChart = (data: any) => {
   const myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   const option: echarts.EChartsOption = {
     title: {
-      text: "Gitee / GitHub",
-      subtext: "访问占比",
+      text: "订单 / 退款",
+      subtext: "占比",
       left: "56%",
       top: "45%",
       textAlign: "center",
@@ -119,10 +121,12 @@ const initChart = (data: any) => {
     ]
   };
   useEcharts(myChart, option);
+  return myChart
 };
-defineExpose({
-  initChart
-});
+
+onMounted(() => {
+  initChart(props.data)
+})
 </script>
 
 <style lang="scss" scoped>
